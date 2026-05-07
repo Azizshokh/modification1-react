@@ -29,13 +29,16 @@ export function HomePage(): React.JSX.Element {
 
           <Stack direction="row" className="hero-btns">
             <Button
-              variant="contained"
+              className="btn-order"
               sx={{ background: "#1b6b4a", color: "#fff" }}
             >
               Order Now
             </Button>
 
-            <Button variant="outlined" sx={{ border: "2px solid #ccc" }}>
+            <Button
+              className="btn-signup-outline"
+              sx={{ border: "2px solid #ccc" }}
+            >
               Sign Up
             </Button>
           </Stack>

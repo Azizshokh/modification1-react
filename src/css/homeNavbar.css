@@ -44,50 +44,6 @@
     object-fit: contain;
 }
 
-.home-navbar .navbar-content .navbar-brand .brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-top {
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: -0.2px;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-super,
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-holding {
-    color: #333;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food {
-    display: flex;
-    align-items: center;
-    gap: 1px;
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: 2px;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food .food-f,
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food .food-o1,
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food .food-o2 {
-    color: #333;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food .food-dot {
-    font-size: 10px;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food .dot-green {
-    color: #1b6b4a;
-}
-
-.home-navbar .navbar-content .navbar-brand .brand-text .brand-food .dot-red {
-    color: #e05c2a;
-}
-
 /** NAV LINKS **/
 
 .home-navbar .navbar-content .navbar-links {
@@ -175,6 +131,7 @@
 @media (max-width: 768px) {
     .home-navbar .navbar-content {
         gap: 16px;
+        flex-wrap: wrap;
     }
 
     .home-navbar .navbar-content .navbar-brand {
@@ -186,19 +143,15 @@
     }
 
     .home-navbar .navbar-content .navbar-links {
-        position: absolute;
-        top: 70px;
-        left: 0;
-        right: 0;
-        display: none;
-        flex-direction: column;
-        padding: 16px 24px;
-        background: #fff;
-        border-bottom: 1px solid #e8f0e9;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        width: 100%;
+        flex: 0 0 100%;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
     .home-navbar .navbar-content .navbar-actions {
-        display: none;
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
     }
 }

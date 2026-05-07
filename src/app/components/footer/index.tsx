@@ -17,7 +17,7 @@ export function Footer(): React.JSX.Element {
       {/* MAIN CONTENT */}
       <Box className="footer-content">
         {/* BRAND */}
-        <Stack className="footer-brand" sx={{ gap: 1.5 }}>
+        <Stack className="footer-brand">
           <img
             src="/icons/PetFoodLogo.svg"
             alt="PetFood"
@@ -59,8 +59,7 @@ export function Footer(): React.JSX.Element {
             FAQ
           </a>
 
-          <a href="#" className="footer-icon-link">
-            <CallIcon sx={{ fontSize: 18 }} />
+          <a href="#" className="footer-link">
             Contact Us
           </a>
 
@@ -73,7 +72,7 @@ export function Footer(): React.JSX.Element {
         </Stack>
 
         {/* SOCIAL */}
-        <Stack className="footer-col" sx={{ gap: 1.5 }}>
+        <Stack className="footer-col footer-social-media" sx={{ gap: 1.5 }}>
           <Typography variant="h6" className="footer-col-title">
             Follow Us
           </Typography>
