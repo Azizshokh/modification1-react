@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+
+import theme from "./app/MaterialTheme";
 import { store } from "./app/store";
 import App from "./app/App";
 import reportWebVitals from "./reportWebVitals";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "./app/MaterialTheme";
-import { BrowserRouter as Router } from "react-router-dom";
 
 import "./css/index.css";
 

@@ -1,5 +1,10 @@
-import { Container } from "@mui/material";
+import React from "react";
+import { Container, Typography } from "@mui/material";
 
-export function HelpPage() {
-  return <Container>Help Page</Container>;
+export function HelpPage(): React.JSX.Element {
+  return (
+    <Container>
+      <Typography variant="h4">Help Page</Typography>
+    </Container>
+  );
 }

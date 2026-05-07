@@ -1,86 +1,65 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React from "react";
+import { Box, Button, Container, IconButton, Stack } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
+import { NavLink } from "react-router-dom";
+
 import "../../../css/homeNavbar.css";
 
 export function HomeNavbar(): React.JSX.Element {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const getNavLinkClassName = ({ isActive }: { isActive: boolean }): string =>
+    isActive ? "nav-link active" : "nav-link";
 
   return (
-    <nav className="home-navbar">
-      <div className="navbar-content">
-        {/* --- Logo --- */}
+    <Box component="nav" className="home-navbar">
+      <Container className="navbar-content">
+        {/* BRAND */}
         <NavLink to="/" className="navbar-brand">
-          <div className="brand-icon">
+          <Box className="brand-icon">
             <img
               src="/icons/PetFoodLogo.svg"
               alt="PetFood Logo"
               className="brand-logo"
             />
-          </div>
+          </Box>
         </NavLink>
 
-        {/* --- Links --- */}
-        <ul className={`navbar-links${menuOpen ? " open" : ""}`}>
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+        {/* LINKS */}
+        <Stack component="ul" direction="row" className="navbar-links">
+          <Box component="li">
+            <NavLink to="/" className={getNavLinkClassName}>
               Home
             </NavLink>
-          </li>
+          </Box>
 
-          <li>
-            <NavLink
-              to="/products"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+          <Box component="li">
+            <NavLink to="/products" className={getNavLinkClassName}>
               Product
             </NavLink>
-          </li>
+          </Box>
 
-          <li>
-            <NavLink
-              to="/help"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-            >
+          <Box component="li">
+            <NavLink to="/help" className={getNavLinkClassName}>
               Help
             </NavLink>
-          </li>
-        </ul>
+          </Box>
+        </Stack>
 
-        {/* --- Actions --- */}
-        <div className="navbar-actions">
-          <button className="cart-btn" aria-label="Cart">
+        {/* ACTIONS */}
+        <Stack className="navbar-actions" direction="row">
+          <IconButton className="cart-btn" aria-label="Cart">
             <ShoppingCartIcon sx={{ color: "white", fontSize: 20 }} />
-          </button>
+          </IconButton>
 
-          <button className="login-btn">
-            <PersonIcon sx={{ fontSize: 18 }} />
+          <Button
+            className="login-btn"
+            startIcon={<PersonIcon sx={{ fontSize: 18 }} />}
+            sx={{ textTransform: "none" }}
+          >
             Login
-          </button>
-        </div>
-
-        {/* --- Hamburger --- */}
-        <button
-          className="hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-      </div>
-    </nav>
+          </Button>
+        </Stack>
+      </Container>
+    </Box>
   );
 }

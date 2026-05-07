@@ -11,7 +11,7 @@ import "../../../css/homePage.css";
 
 export function HomePage(): React.JSX.Element {
   return (
-    <Box className="home-page">
+    <Box className="homepage">
       {/* HERO */}
       <Box className="hero-section">
         {/* LEFT */}
@@ -27,7 +27,7 @@ export function HomePage(): React.JSX.Element {
             strong, energetic, and full of joy.
           </Typography>
 
-          <Stack sx={{ flexDirection: "row" }} className="hero-btns">
+          <Stack direction="row" className="hero-btns">
             <Button
               variant="contained"
               sx={{ background: "#1b6b4a", color: "#fff" }}
@@ -41,7 +41,7 @@ export function HomePage(): React.JSX.Element {
           </Stack>
 
           {/* BADGES */}
-          <Stack sx={{ flexDirection: "row" }} className="trust-badges">
+          <Stack direction="row" className="trust-badges">
             <Box className="badge">
               <span className="badge-icon bg-green">
                 <EcoIcon sx={{ color: "white", fontSize: 16 }} />
@@ -94,7 +94,7 @@ export function HomePage(): React.JSX.Element {
             </Box>
 
             <Box className="promo-bowl">
-              <img src="/icons/PetFoodLogo.svg" alt="bowl" />
+              <img src="/icons/PetFoodLogo.svg" alt="PetFood bowl" />
             </Box>
           </Box>
         </Box>
@@ -130,7 +130,12 @@ export function HomePage(): React.JSX.Element {
       <Box className="feature-row">
         <Stack className="feature-item">
           <span className="feature-emoji" style={{ background: "#17a48a" }}>
-            <img src="/icons/delivery.png" width={22} height={22} />
+            <img
+              src="/icons/delivery.png"
+              alt="Delivery"
+              width={22}
+              height={22}
+            />
           </span>
           <Box>
             <strong>Fast Delivery</strong>
@@ -140,7 +145,12 @@ export function HomePage(): React.JSX.Element {
 
         <Stack className="feature-item">
           <span className="feature-emoji" style={{ background: "#e05c2a" }}>
-            <img src="/icons/nearestplace.png" width={22} height={22} />
+            <img
+              src="/icons/nearestplace.png"
+              alt="Nearest place"
+              width={22}
+              height={22}
+            />
           </span>
           <Box>
             <strong>Nearest Place</strong>

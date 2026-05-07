@@ -14,8 +14,9 @@ import "../../../css/footer.css";
 export function Footer(): React.JSX.Element {
   return (
     <Box component="footer" className="site-footer">
+      {/* MAIN CONTENT */}
       <Box className="footer-content">
-        {/* --- Brand --- */}
+        {/* BRAND */}
         <Stack className="footer-brand" sx={{ gap: 1.5 }}>
           <img
             src="/icons/PetFoodLogo.svg"
@@ -28,7 +29,7 @@ export function Footer(): React.JSX.Element {
           </Typography>
         </Stack>
 
-        {/* --- Navigation --- */}
+        {/* NAVIGATION */}
         <Stack className="footer-col" sx={{ gap: 1.5 }}>
           <Typography variant="h6" className="footer-col-title">
             Navigation
@@ -48,7 +49,7 @@ export function Footer(): React.JSX.Element {
           </NavLink>
         </Stack>
 
-        {/* --- Support --- */}
+        {/* SUPPORT */}
         <Stack className="footer-col" sx={{ gap: 1.5 }}>
           <Typography variant="h6" className="footer-col-title">
             Support
@@ -71,7 +72,7 @@ export function Footer(): React.JSX.Element {
           </a>
         </Stack>
 
-        {/* --- Social --- */}
+        {/* SOCIAL */}
         <Stack className="footer-col" sx={{ gap: 1.5 }}>
           <Typography variant="h6" className="footer-col-title">
             Follow Us
@@ -104,7 +105,7 @@ export function Footer(): React.JSX.Element {
         </Stack>
       </Box>
 
-      {/* --- Bottom --- */}
+      {/* FOOTER BOTTOM */}
       <Box className="footer-bottom">
         <Typography variant="body2">
           © {new Date().getFullYear()} PetFood. All rights reserved.

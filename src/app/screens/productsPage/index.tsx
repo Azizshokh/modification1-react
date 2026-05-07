@@ -1,5 +1,10 @@
-import { Container } from "@mui/material";
+import React from "react";
+import { Container, Typography } from "@mui/material";
 
-export function ProductsPage() {
-  return <Container>Products Page</Container>;
+export function ProductsPage(): React.JSX.Element {
+  return (
+    <Container>
+      <Typography variant="h4">Products Page</Typography>
+    </Container>
+  );
 }
