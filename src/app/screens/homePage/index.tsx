@@ -10,6 +10,8 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import "../../../css/homePage.css";
 
 export function HomePage(): React.JSX.Element {
+  // Test uchun: true qilsangiz Sign Up button yo'qoladi, null holatda ko'rinadi.
+  const authMember: boolean | null = null;
   return (
     <Box className="homepage">
       {/* HERO */}
@@ -27,7 +29,10 @@ export function HomePage(): React.JSX.Element {
             strong, energetic, and full of joy.
           </Typography>
 
-          <Stack direction="row" className="hero-btns">
+          <Stack
+            direction="row"
+            className={authMember ? "hero-btns hero-btns--auth" : "hero-btns"}
+          >
             <Button
               className="btn-order"
               sx={{ background: "#1b6b4a", color: "#fff" }}
@@ -35,12 +40,14 @@ export function HomePage(): React.JSX.Element {
               Order Now
             </Button>
 
-            <Button
-              className="btn-signup-outline"
-              sx={{ border: "2px solid #ccc" }}
-            >
-              Sign Up
-            </Button>
+            {!authMember ? (
+              <Button
+                className="btn-signup-outline"
+                sx={{ border: "2px solid #ccc" }}
+              >
+                Sign Up
+              </Button>
+            ) : null}
           </Stack>
 
           {/* BADGES */}
@@ -129,7 +136,7 @@ export function HomePage(): React.JSX.Element {
         </Box>
       </Box>
 
-      {/* FEATURES (sizda bu yerda svg yo‘q edi — o‘zgartirmadim) */}
+      {/* FEATURES  */}
       <Box className="feature-row">
         <Stack className="feature-item">
           <span className="feature-emoji" style={{ background: "#17a48a" }}>

@@ -60,6 +60,14 @@ body {
     border-radius: 999px !important;
 }
 
+.homepage .hero-section .hero-btns--auth {
+    justify-content: center;
+}
+
+.homepage .hero-section .hero-btns--auth .btn-order {
+    width: 150px;
+}
+
 .homepage .hero-section .hero-btns .btn-signup-outline {
     border-radius: 999px !important;
 }
@@ -321,46 +329,3 @@ body {
     color: #888;
 }
 
-
-
-/** RESPONSIVE **/
-
-@media (max-width: 960px) {
-    .homepage .hero-section {
-        flex-direction: column;
-        padding: 40px 24px 24px;
-    }
-
-    .homepage .hero-section .hero-title {
-        font-size: 38px;
-    }
-
-    .homepage .hero-section .hero-right {
-        width: 100%;
-        min-height: 300px;
-    }
-
-    .homepage .feature-row {
-        flex-wrap: wrap;
-        gap: 24px;
-    }
-
-    .homepage .feature-row .feature-item {
-        flex: calc(50% - 24px);
-        border-right: none;
-    }
-}
-
-@media (max-width: 520px) {
-    .homepage .hero-section .hero-title {
-        font-size: 30px;
-    }
-
-    .homepage .hero-section .trust-badges {
-        gap: 16px;
-    }
-
-    .homepage .feature-row .feature-item {
-        flex: 100%;
-    }
-}

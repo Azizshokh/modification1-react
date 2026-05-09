@@ -7,6 +7,9 @@ import { NavLink } from "react-router-dom";
 import "../../../css/homeNavbar.css";
 
 export function HomeNavbar(): React.JSX.Element {
+  // Test uchun: true qilsangiz user icon + Orders/MyPage chiqadi, null holatda Login + SignUp chiqadi.
+  const authMember: boolean | null = null;
+
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }): string =>
     isActive ? "nav-link active" : "nav-link";
 
@@ -34,9 +37,25 @@ export function HomeNavbar(): React.JSX.Element {
 
           <Box component="li">
             <NavLink to="/products" className={getNavLinkClassName}>
-              Product
+              Products
             </NavLink>
           </Box>
+
+          {authMember ? (
+            <Box component="li">
+              <NavLink to="/orders" className={getNavLinkClassName}>
+                Orders
+              </NavLink>
+            </Box>
+          ) : null}
+
+          {authMember ? (
+            <Box component="li">
+              <NavLink to="/member-page" className={getNavLinkClassName}>
+                My Page
+              </NavLink>
+            </Box>
+          ) : null}
 
           <Box component="li">
             <NavLink to="/help" className={getNavLinkClassName}>
@@ -51,13 +70,21 @@ export function HomeNavbar(): React.JSX.Element {
             <ShoppingCartIcon sx={{ color: "white", fontSize: 20 }} />
           </IconButton>
 
-          <Button
-            className="login-btn"
-            startIcon={<PersonIcon sx={{ fontSize: 18 }} />}
-            sx={{ textTransform: "none" }}
-          >
-            Login
-          </Button>
+          {!authMember ? (
+            <>
+              <Button
+                className="login-btn"
+                startIcon={<PersonIcon sx={{ fontSize: 18 }} />}
+                sx={{ textTransform: "none" }}
+              >
+                Login
+              </Button>
+            </>
+          ) : (
+            <IconButton className="user-btn" aria-label="User profile">
+              <PersonIcon sx={{ color: "white", fontSize: 20 }} />
+            </IconButton>
+          )}
         </Stack>
       </Container>
     </Box>

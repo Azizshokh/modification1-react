@@ -126,32 +126,37 @@
     color: #0b5d57;
 }
 
-/** RESPONSIVE **/
-
-@media (max-width: 768px) {
-    .home-navbar .navbar-content {
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .home-navbar .navbar-content .navbar-brand {
-        min-width: auto;
-    }
-
-    .home-navbar .navbar-content .navbar-brand .brand-icon .brand-logo {
-        width: 120px;
-    }
-
-    .home-navbar .navbar-content .navbar-links {
-        width: 100%;
-        flex: 0 0 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .home-navbar .navbar-content .navbar-actions {
-        width: 100%;
-        margin-left: 0;
-        justify-content: center;
-    }
+.home-navbar .navbar-content .navbar-actions .signup-btn {
+    min-width: 110px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    background: #0f766e;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
 }
+
+.home-navbar .navbar-content .navbar-actions .signup-btn:hover {
+    background: #0b5d57;
+}
+
+.home-navbar .navbar-content .navbar-actions .user-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: #0f766e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.home-navbar .navbar-content .navbar-actions .user-btn:hover {
+    background: #0b5d57;
+}
+
