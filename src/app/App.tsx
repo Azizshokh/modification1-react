@@ -2,7 +2,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import { Route, Routes, useLocation } from "react-router-dom";
 
-import { HomePage } from "./screens/homePage";
+import HomeScreen from "./screens/homePage";
 import { ProductsPage } from "./screens/productsPage";
 import { OrdersPage } from "./screens/ordersPage";
 import { UserPage } from "./screens/userPage";
@@ -22,7 +22,7 @@ function App(): React.JSX.Element {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/member-page" element={<UserPage />} />
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomeScreen />} />
       </Routes>
 
       <Footer />
