@@ -256,19 +256,19 @@ body {
 }
 
 .homepage .hero-section .hero-right .tag-protein {
-    top: 30px;
+    top: 45px;
     left: 20px;
     background: #1b6b4a;
 }
 
 .homepage .hero-section .hero-right .tag-natural {
-    top: 30px;
-    right: 0;
+    top: 45px;
+    right: -21px;
     background: #5aad7e;
 }
 
 .homepage .hero-section .hero-right .tag-vet {
-    right: 10px;
+    right: 0px;
     bottom: 60px;
     background: #e0a82a;
 }

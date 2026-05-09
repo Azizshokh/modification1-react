@@ -10,14 +10,12 @@ import { Footer } from "./components/footer";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
 
-import "../css/app.css";
-
 function App(): React.JSX.Element {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
   return (
-    <Box className="App">
+    <Box sx={{ textAlign: "center" }}>
       {isHomePage ? <HomeNavbar /> : <OtherNavbar />}
 
       <Routes>

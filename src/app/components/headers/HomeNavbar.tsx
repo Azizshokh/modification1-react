@@ -4,6 +4,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
 import { NavLink } from "react-router-dom";
 
+import Basket from "./Basket";
 import "../../../css/homeNavbar.css";
 
 export function HomeNavbar(): React.JSX.Element {
@@ -66,9 +67,7 @@ export function HomeNavbar(): React.JSX.Element {
 
         {/* ACTIONS */}
         <Stack className="navbar-actions" direction="row">
-          <IconButton className="cart-btn" aria-label="Cart">
-            <ShoppingCartIcon sx={{ color: "white", fontSize: 20 }} />
-          </IconButton>
+          <Basket />
 
           {!authMember ? (
             <>

@@ -1,0 +1,328 @@
+/** BASKET */
+
+/* ─── Cart button ─────────────────────────────────────────────── */
+.basket-cart-btn {
+    background: #e8f5ee !important;
+    border: 1.5px solid #1B6B4A !important;
+    width: 48px !important;
+    height: 48px !important;
+}
+
+.basket-cart-btn:hover {
+    background: #d0ead8 !important;
+}
+
+.basket-cart-btn .MuiBadge-badge {
+    background-color: #FF4033;
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    border: 2px solid #fff;
+    min-width: 18px;
+    height: 18px;
+}
+
+.basket-cart-btn .MuiSvgIcon-root {
+    color: #1B6B4A;
+}
+
+/* ─── Dropdown paper ──────────────────────────────────────────── */
+.basket-menu-paper {
+    width: 340px !important;
+    border-radius: 12px !important;
+    border: 1px solid #e8e8e8 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+    overflow: visible !important;
+    margin-top: 12px;
+}
+
+.basket-menu-paper::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background-color: #1B6B4A;
+    transform: translateY(-50%) rotate(45deg);
+    z-index: 0;
+}
+
+/* ─── Header ──────────────────────────────────────────────────── */
+.basket-header {
+    background: #1B6B4A;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 12px 12px 0 0;
+}
+
+.basket-header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+}
+
+.basket-header-title .MuiSvgIcon-root {
+    font-size: 18px;
+    color: #fff;
+}
+
+.basket-header-title-text {
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    color: #fff !important;
+}
+
+.basket-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.basket-count-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
+}
+
+.basket-clear-btn {
+    background: rgba(255, 64, 51, 0.18);
+    color: #ffd0cd;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 64, 51, 0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.basket-clear-btn:hover {
+    background: rgba(255, 64, 51, 0.32);
+    color: #fff;
+}
+
+.basket-clear-btn .MuiSvgIcon-root {
+    font-size: 13px !important;
+}
+
+/* ─── Items list ──────────────────────────────────────────────── */
+.basket-items-list {
+    max-height: 270px;
+    overflow-y: auto;
+}
+
+/* ─── Item row ────────────────────────────────────────────────── */
+.basket-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e8e8e8;
+    transition: background 0.15s;
+}
+
+.basket-item:hover {
+    background: #fafafa;
+}
+
+.basket-item:last-child {
+    border-bottom: none;
+}
+
+.basket-item-thumb {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    background: #fff8e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.basket-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.basket-item-name {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1a1a1a !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.basket-item-price {
+    font-size: 12px !important;
+    color: #CC7A08 !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+}
+
+.basket-item-remove {
+    color: #ccc !important;
+    transition: color 0.15s !important;
+}
+
+.basket-item-remove:hover {
+    color: #FF4033 !important;
+}
+
+/* ─── Qty control ─────────────────────────────────────────────── */
+.basket-qty-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #1B6B4A;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.basket-qty-btn {
+    width: 26px;
+    height: 26px;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1B6B4A;
+    transition: background 0.15s;
+}
+
+.basket-qty-btn:hover {
+    background: #e8f5ee;
+}
+
+.basket-qty-btn .MuiSvgIcon-root {
+    font-size: 14px !important;
+}
+
+.basket-qty-value {
+    min-width: 24px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+    border-left: 1px solid #1B6B4A;
+    border-right: 1px solid #1B6B4A;
+    line-height: 26px;
+    padding: 0 4px;
+}
+
+/* ─── Empty state ─────────────────────────────────────────────── */
+.basket-empty {
+    padding: 32px 16px;
+    text-align: center;
+}
+
+.basket-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e8f5ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+.basket-empty-icon .MuiSvgIcon-root {
+    color: #1B6B4A;
+    font-size: 26px !important;
+}
+
+.basket-empty-title {
+    font-weight: 600 !important;
+    color: #1B6B4A !important;
+    margin-bottom: 4px !important;
+}
+
+.basket-empty-desc {
+    font-size: 13px !important;
+    color: #666 !important;
+}
+
+/* ─── Summary ─────────────────────────────────────────────────── */
+.basket-summary {
+    padding: 12px 14px;
+    border-top: 1.5px dashed #e8e8e8;
+    background: #fafafa;
+}
+
+.basket-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.basket-summary-label {
+    font-size: 12px !important;
+    color: #666 !important;
+}
+
+.basket-summary-value {
+    font-size: 12px !important;
+    color: #666 !important;
+}
+
+.basket-summary-free {
+    font-size: 12px !important;
+    color: #1B6B4A !important;
+    font-weight: 600 !important;
+}
+
+.basket-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.basket-total-label {
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #1a1a1a !important;
+}
+
+.basket-total-value {
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    color: #1B6B4A !important;
+}
+
+.basket-order-btn {
+    background: #1B6B4A !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-transform: none !important;
+}
+
+.basket-order-btn:hover {
+    background: #155a3d !important;
+}
+
+.basket-order-btn:active {
+    transform: scale(0.98);
+}
