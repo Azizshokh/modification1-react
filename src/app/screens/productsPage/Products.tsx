@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import {
   Box,
+  Container,
+  Stack,
   Card,
   CardMedia,
   CardContent,
@@ -23,7 +25,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import EmailIcon from "@mui/icons-material/Email";
 import "./../../../css/product/product.css";
+import "./../../../css/product/nearestPlace.css";
 
 interface Product {
   id: number;
@@ -35,6 +40,24 @@ interface Product {
   tag?: "New" | "Sale" | "Popular";
   image: string;
   weight: string;
+}
+
+interface ContactCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}
+
+function ContactCard({ icon, label, value }: ContactCardProps) {
+  return (
+    <Box className={"contact-card"}>
+      <Box className={"contact-icon-wrap"}>{icon}</Box>
+      <Box className={"contact-info"}>
+        <span className={"contact-label"}>{label}</span>
+        <span className={"contact-value"}>{value}</span>
+      </Box>
+    </Box>
+  );
 }
 
 const PRODUCTS: Product[] = [
@@ -437,6 +460,58 @@ const Product: React.FC = () => {
           />
         </Box>
       )}
+
+      <div className={"nearest-place"}>
+        <Container>
+          <Stack
+            className={"nearest-place-wrap"}
+            direction={"column"}
+            sx={{ alignItems: "center" }}
+          >
+            <Box className={"nearest-title-wrap"}>
+              <h2 className={"nearest-title"}>Nearest Place</h2>
+              <p className={"nearest-subtitle"}>Find our nearest location</p>
+            </Box>
+
+            <Stack
+              className={"nearest-content"}
+              direction={"row"}
+              sx={{ alignItems: "stretch" }}
+            >
+              <Box className={"nearest-map-wrap"}>
+                <iframe
+                  className={"nearest-map"}
+                  src={
+                    "https://www.google.com/maps?q=Seoul,+South+Korea&output=embed"
+                  }
+                  allowFullScreen
+                  loading={"lazy"}
+                  referrerPolicy={"no-referrer-when-downgrade"}
+                />
+              </Box>
+
+              <Box className={"nearest-divider"} />
+
+              <Stack
+                className={"nearest-contacts"}
+                direction={"column"}
+                sx={{ justifyContent: "center" }}
+              >
+                <ContactCard
+                  icon={<LocalPhoneIcon className={"contact-svg"} />}
+                  label={"Phone:"}
+                  value={"+880 123 4567 786"}
+                />
+                <ContactCard
+                  icon={<EmailIcon className={"contact-svg"} />}
+                  label={"Email:"}
+                  value={"abc@gmail.com"}
+                />
+              </Stack>
+            </Stack>
+          </Stack>
+        </Container>
+      </div>
     </Box>
   );
 };

@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@400;600;700&display=swap');
+
+/* ─── Root ──────────────────────────────────────────────── */
+.nearest-place {
+    --teal:         #1A9E7E;
+    --teal-light:   #E8F7F3;
+    --teal-dark:    #0F7A60;
+    --text-dark:    #1C2B2B;
+    --text-mid:     #4A6060;
+    --text-muted:   #8AA0A0;
+    --white:        #FFFFFF;
+    --bg:           #F8FAFA;
+    --border:       #E0EEEB;
+    --shadow-card:  0 4px 24px rgba(26, 158, 126, 0.10);
+    --shadow-hover: 0 8px 32px rgba(26, 158, 126, 0.18);
+    --radius-map:   18px;
+    --radius-card:  14px;
+    --trans:        0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    background: var(--bg);
+    padding: 72px 0 80px;
+    font-family: 'Nunito', sans-serif;
+    width: 100%;
+}
+
+/* ─── Wrapper ───────────────────────────────────────────── */
+.nearest-place-wrap {
+    gap: 40px;
+}
+
+/* ─── Title Block ───────────────────────────────────────── */
+.nearest-title-wrap {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.nearest-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+}
+
+.nearest-subtitle {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* ─── Content Row ───────────────────────────────────────── */
+.nearest-content {
+    width: 100%;
+    gap: 0;
+    align-items: stretch !important;
+    border-radius: var(--radius-map);
+    background: var(--white);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+/* ─── Map ───────────────────────────────────────────────── */
+.nearest-map-wrap {
+    flex: 1;
+    min-height: 320px;
+    position: relative;
+    overflow: hidden;
+}
+
+.nearest-map {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    border: none;
+    display: block;
+    filter: saturate(0.85) brightness(1.02);
+}
+
+/* ─── Dashed Divider ────────────────────────────────────── */
+.nearest-divider {
+    width: 1px;
+    background: transparent;
+    border-left: 2px dashed var(--teal);
+    opacity: 0.45;
+    flex-shrink: 0;
+    margin: 20px 0;
+}
+
+/* ─── Contact Cards Column ──────────────────────────────── */
+.nearest-contacts {
+    width: 240px;
+    flex-shrink: 0;
+    padding: 28px 24px;
+    gap: 16px !important;
+    background: var(--white);
+    justify-content: center !important;
+}
+
+/* ─── Contact Card ──────────────────────────────────────── */
+.contact-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px 20px;
+    border-radius: var(--radius-card);
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    box-shadow: 0 2px 12px rgba(26,158,126,0.07);
+    transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+    cursor: default;
+    text-align: center;
+}
+
+.contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--teal);
+}
+
+/* ─── Icon Wrapper (teal square with rounded corners) ───── */
+.contact-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(26,158,126,0.30);
+    transition: background var(--trans), transform var(--trans);
+}
+
+.contact-card:hover .contact-icon-wrap {
+    background: var(--teal-dark);
+    transform: scale(1.08);
+}
+
+.contact-svg {
+    font-size: 22px !important;
+    color: var(--white) !important;
+}
+
+/* ─── Contact Text ──────────────────────────────────────── */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.contact-label {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-value {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
