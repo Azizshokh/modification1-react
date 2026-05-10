@@ -4,7 +4,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
-import "./../../../css/newProducts.css";
+import "./../../../css/home/newProducts.css";
 
 // ─── Types ───────────────────────────────────────────────────────
 interface Product {
@@ -130,9 +130,18 @@ export default function NewProducts(): React.JSX.Element {
             <NewReleasesIcon className="new-products-title__icon" />
           </Box>
           <Stack className="new-cards-frame">
-            {PRODUCTS.map((product) => (
-              <NewProductCard key={product.id} product={product} />
-            ))}
+            {PRODUCTS.length !== 0 ? (
+              PRODUCTS.map((product) => (
+                <NewProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <Box className="no-data-box">
+                <span className="no-data-box__icon">🐾</span>
+                <span className="no-data-box__text">
+                  New products are not available!
+                </span>
+              </Box>
+            )}
           </Stack>
         </Stack>
       </Container>

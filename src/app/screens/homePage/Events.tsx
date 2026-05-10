@@ -11,7 +11,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "./../../../css/events.css";
+import "./../../../css/home/events.css";
 
 // ─── Types ───────────────────────────────────────────────────────
 interface EventItem {

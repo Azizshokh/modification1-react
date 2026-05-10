@@ -3,7 +3,7 @@ import { Box, Container, Stack } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 
-import "../../../css/homePage.css";
+import "../../../css/home/homePage.css";
 
 export default function OurServices(): React.JSX.Element {
   return (

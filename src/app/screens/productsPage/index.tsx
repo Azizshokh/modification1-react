@@ -1,10 +1,15 @@
 import React from "react";
-import { Container, Typography } from "@mui/material";
+import { Route, Routes } from "react-router-dom";
+import ChosenProduct from "./ChosenProduct";
+import Products from "./Products";
 
-export function ProductsPage(): React.JSX.Element {
+export default function ProductsPage() {
   return (
-    <Container>
-      <Typography variant="h4">Products Page</Typography>
-    </Container>
+    <div className={"products-page"}>
+      <Routes>
+        <Route path=":productId" element={<ChosenProduct />} />
+        <Route path="" element={<Products />} />
+      </Routes>
+    </div>
   );
 }

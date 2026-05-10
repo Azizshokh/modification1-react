@@ -5,7 +5,7 @@ import SecurityIcon from "@mui/icons-material/Security";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CircleIcon from "@mui/icons-material/Circle";
 
-import "../../../css/homePage.css";
+import "../../../css/home/homePage.css";
 
 export function HomePage(): React.JSX.Element {
   // Test uchun: true qilsangiz Sign Up button yo'qoladi, null holatda ko'rinadi.

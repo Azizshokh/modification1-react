@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Container, Stack } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import PetsIcon from "@mui/icons-material/Pets";
-import "./../../../css/aboutUs.css";
+import "./../../../css/home/aboutUs.css";
 
 // ─── Stat item data ───────────────────────────────────────────────
 interface StatItem {

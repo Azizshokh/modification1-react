@@ -5,7 +5,7 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PetsIcon from "@mui/icons-material/Pets";
-import "./../../../css/popularProducts.css";
+import "./../../../css/home/popularProducts.css";
 
 // ─── Types ───────────────────────────────────────────────────────
 interface Product {
@@ -112,9 +112,18 @@ export default function PopularProducts(): React.JSX.Element {
             <PetsIcon className="category-title__pets-icon" />
           </Box>
           <Stack className="cards-frame">
-            {PRODUCTS.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {PRODUCTS.length !== 0 ? (
+              PRODUCTS.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <Box className="no-data-box">
+                <span className="no-data-box__icon">🐾</span>
+                <span className="no-data-box__text">
+                  Popular products are not available!
+                </span>
+              </Box>
+            )}
           </Stack>
         </Stack>
       </Container>

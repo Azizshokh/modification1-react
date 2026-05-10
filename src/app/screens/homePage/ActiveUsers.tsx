@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, Stack } from "@mui/material";
 import PetsIcon from "@mui/icons-material/Pets";
-import "./../../../css/activeUsers.css";
+import "./../../../css/home/activeUsers.css";
 
 // ─── Types ───────────────────────────────────────────────────────
 interface Member {
