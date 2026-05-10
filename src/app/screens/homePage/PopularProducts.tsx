@@ -120,7 +120,7 @@ export default function PopularProducts(): React.JSX.Element {
               <Box className="no-data-box">
                 <span className="no-data-box__icon">🐾</span>
                 <span className="no-data-box__text">
-                  Popular products are not available!
+                  Popular products are not available!!!
                 </span>
               </Box>
             )}

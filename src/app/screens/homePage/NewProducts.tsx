@@ -138,7 +138,7 @@ export default function NewProducts(): React.JSX.Element {
               <Box className="no-data-box">
                 <span className="no-data-box__icon">🐾</span>
                 <span className="no-data-box__text">
-                  New products are not available!
+                  New products are not available!!!
                 </span>
               </Box>
             )}
