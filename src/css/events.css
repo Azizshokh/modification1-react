@@ -1,0 +1,299 @@
+/* ─── Section wrapper ─────────────────────────────────────────── */
+.events-frame {
+  padding: 72px 0 88px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* ─── Inner stack ─────────────────────────────────────────────── */
+.events-main {
+  gap: 36px !important;
+  align-items: center;
+}
+
+/* ================================================================
+   Title block
+   ================================================================ */
+.events-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.events-title-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* category-title — shared class */
+.events-frame .category-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1b6b4a;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+}
+
+/* Gold underline accent */
+.events-frame .category-title__line {
+  display: block;
+  width: 52px;
+  height: 3px;
+  border-radius: 2px;
+  background: #cc7a08;
+}
+
+.events-subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+  margin: 0;
+}
+
+/* ================================================================
+   Swiper container
+   ================================================================ */
+.events-info {
+  width: 100%;
+  padding: 12px 0 28px !important;
+}
+
+/* ================================================================
+   Single slide card
+   ================================================================ */
+.events-info-frame {
+  width: 760px !important;          /* fixed slide width */
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1.5px solid #e8f5ee;
+  box-shadow: 0 4px 24px rgba(27, 107, 74, 0.1);
+  display: flex !important;
+  flex-direction: row !important;   /* image left | content right */
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+  height: 340px;
+}
+
+.events-info-frame:hover {
+  box-shadow: 0 12px 40px rgba(27, 107, 74, 0.2);
+  transform: translateY(-3px);
+}
+
+/* ── Left: image ── */
+.events-img-wrap {
+  position: relative;
+  width: 320px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.events-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.events-info-frame:hover .events-img {
+  transform: scale(1.06);
+}
+
+/* Tag badge — top-left on image */
+.events-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  background: #1b6b4a;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Right: content ── */
+.events-desc {
+  flex: 1;
+  min-width: 0;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.events-bott {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.bott-left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+
+/* ── Title + speaker row ── */
+.event-title-speaker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.event-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Organizer row */
+.event-organizator {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.event-speaker-icon {
+  font-size: 17px !important;
+  color: #1b6b4a;
+}
+
+.spec-text-author {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1b6b4a;
+  margin: 0;
+}
+
+/* ── Description text ── */
+.text-desc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.7;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* ── Bottom info: date + location ── */
+.bott-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed #e8f5ee;
+}
+
+.bott-info-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+.bott-icon {
+  font-size: 17px !important;
+  color: #cc7a08 !important;   /* gold icons */
+  flex-shrink: 0;
+}
+
+/* ================================================================
+   Prev / Pagination / Next
+   ================================================================ */
+.prev-next-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Nav buttons */
+.events-nav-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e8f5ee;
+  border: 1.5px solid #1b6b4a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.events-nav-btn::after {
+  display: none;
+}
+
+.events-nav-btn:hover {
+  background: #1b6b4a;
+  transform: scale(1.08);
+}
+
+.events-nav-btn:hover .nav-arrow-icon {
+  color: #ffffff;
+}
+
+.events-frame .swiper-button-prev,
+.events-frame .swiper-button-next {
+  display: none !important;
+}
+
+.nav-arrow-icon {
+  font-size: 15px !important;
+  color: #1b6b4a;
+  transition: color 0.2s ease;
+}
+
+/* Pagination dots */
+.dot-frame-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* override Swiper pagination bullets */
+.events-frame .swiper-pagination {
+  position: static !important;
+  width: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.events-frame .swiper-pagination-bullet {
+  width: 8px !important;
+  height: 8px !important;
+  background: #c8e0d4 !important;
+  opacity: 1 !important;
+  border-radius: 50% !important;
+  transition: background 0.2s ease, width 0.2s ease !important;
+}
+
+.events-frame .swiper-pagination-bullet-active {
+  background: #1b6b4a !important;
+  width: 22px !important;
+  border-radius: 4px !important;
+}

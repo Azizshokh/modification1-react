@@ -1,0 +1,179 @@
+/* ================================================================
+   AboutUs.css
+   Brand: #1B6B4A (green) | #FF4033 (red) | #CC7A08 (gold)
+   Layout: left circle image | right content — mirrors screenshot
+   ================================================================ */
+
+/* ─── Section wrapper ─────────────────────────────────────────── */
+.about-frame {
+  padding: 80px 0 90px;
+  background: #ffffff;
+}
+
+/* ─── Inner: two-column flex row ─────────────────────────────── */
+.about__inner {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 64px;
+}
+
+/* ================================================================
+   Left column — circular image
+   ================================================================ */
+.about__img-wrap {
+  flex-shrink: 0;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 6px #e8f5ee,          /* inner green ring */
+    0 0 0 10px #1b6b4a,         /* green border ring */
+    0 8px 40px rgba(27, 107, 74, 0.18);
+}
+
+.about__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================================================================
+   Right column — content
+   ================================================================ */
+.about__content {
+  flex: 1;
+  gap: 18px !important;
+  min-width: 0;
+}
+
+/* ── Title ── */
+.about__title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about__title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #1b6b4a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Paw icon under title */
+.about__title-paw {
+  font-size: 28px !important;
+  color: #cc7a08 !important;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+/* ── Bold tagline ── */
+.about__tagline {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Body text ── */
+.about__body {
+  font-size: 14px;
+  font-weight: 400;
+  color: #555555;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ================================================================
+   Stats row
+   ================================================================ */
+.about__stats-row {
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 36px !important;
+  padding: 8px 0;
+}
+
+.about__stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Stat value base */
+.about__stat-value {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+/* Color modifiers */
+.about__stat-value--red   { color: #ff4033; }
+.about__stat-value--green { color: #1b6b4a; }
+.about__stat-value--gold  { color: #cc7a08; }
+
+/* Star icon next to "5" */
+.about__star-icon {
+  font-size: 28px !important;
+  color: #cc7a08;
+  margin-left: 2px;
+  margin-top: 2px;
+}
+
+.about__stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ================================================================
+   Owner block
+   ================================================================ */
+.about__owner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.about__owner-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1b6b4a;
+  flex-shrink: 0;
+  /* fallback bg if image missing */
+  background: #e8f5ee;
+}
+
+.about__owner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.about__owner-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.about__owner-role {
+  font-size: 12px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: capitalize;
+}
