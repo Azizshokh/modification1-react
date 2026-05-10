@@ -441,9 +441,10 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 80px 0;
-  color: var(--text-light);
-  font-size: 1.1rem;
-  font-weight: 600;
+  color: #1b6b4a;
+  font-size: 3.1rem;
+  font-weight: 800;
+  opacity: 0.7;
 }
 
 /* ─── Pagination ────────────────────────────────────────────────────────────── */
