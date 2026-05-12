@@ -42,6 +42,12 @@ export function HomeNavbar(): React.JSX.Element {
             </NavLink>
           </Box>
 
+          <Box component="li">
+            <NavLink to="/help" className={getNavLinkClassName}>
+              Help
+            </NavLink>
+          </Box>
+
           {authMember ? (
             <Box component="li">
               <NavLink to="/orders" className={getNavLinkClassName}>
@@ -58,17 +64,13 @@ export function HomeNavbar(): React.JSX.Element {
             </Box>
           ) : null}
 
-          <Box component="li">
-            <NavLink to="/help" className={getNavLinkClassName}>
-              Help
-            </NavLink>
-          </Box>
-
-          <Box component="li">
-            <NavLink to="/help" className={getNavLinkClassName}>
-              Veterinary
-            </NavLink>
-          </Box>
+          {authMember ? (
+            <Box component="li">
+              <NavLink to="/veterinary" className={getNavLinkClassName}>
+                Veterinary
+              </NavLink>
+            </Box>
+          ) : null}
         </Stack>
 
         {/* ACTIONS */}

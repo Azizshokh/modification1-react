@@ -58,14 +58,14 @@ export function OtherNavbar(): React.JSX.Element {
             ) : null}
 
             <Box component="li">
-              <NavLink to="/help" className={getNavLinkClassName}>
-                Help
+              <NavLink to="/veterinary" className={getNavLinkClassName}>
+                Veterinary
               </NavLink>
             </Box>
 
             <Box component="li">
               <NavLink to="/help" className={getNavLinkClassName}>
-                Veterinary
+                Help
               </NavLink>
             </Box>
           </Stack>

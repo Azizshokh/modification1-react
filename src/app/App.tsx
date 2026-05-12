@@ -10,6 +10,7 @@ import { Footer } from "./components/footer";
 import { HomeNavbar } from "./components/headers/HomeNavbar";
 import { OtherNavbar } from "./components/headers/OtherNavbar";
 import HelpPage from "./screens/helpPage";
+import VeterinaryPage from "./screens/veterinaryPage";
 
 function App(): React.JSX.Element {
   const location = useLocation();
@@ -24,7 +25,7 @@ function App(): React.JSX.Element {
         <Route path="/products/*" element={<ProductsPage />} />
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/member-page" element={<UserPage />} />
-        <Route path="/veterinary" element={<HelpPage />} />
+        <Route path="/veterinary" element={<VeterinaryPage />} />
         <Route path="/help" element={<HelpPage />} />
       </Routes>
 

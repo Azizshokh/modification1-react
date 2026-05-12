@@ -1,5 +1,12 @@
 import { Box, Container, Stack } from "@mui/material";
 import { Settings } from "./Settings";
+import PetsIcon from "@mui/icons-material/Pets";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import "../../../css/user/userPage.css";
 
 export function UserPage() {
@@ -11,7 +18,7 @@ export function UserPage() {
         {/* Page Header */}
         <div className={"page-header"}>
           <div className={"page-header-badge"}>
-            <img src={"/icons/paw.svg"} alt="paw" className={"paw-icon"} />
+            <PetsIcon className={"paw-icon"} />
             <span>Pet Owner Profile</span>
           </div>
           <h1 className={"page-title"}>My Account</h1>
@@ -25,11 +32,7 @@ export function UserPage() {
           <Stack className={"my-page-left"}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <Box className={"menu-name"}>
-                <img
-                  src={"/icons/edit-paw.svg"}
-                  alt=""
-                  className={"menu-icon"}
-                />
+                <ManageAccountsIcon className={"menu-icon"} />
                 Update My Details
               </Box>
               <Box className={"menu-content"}>
@@ -59,11 +62,7 @@ export function UserPage() {
                 <span className={"member-type-tag"}>{authMember}</span>
 
                 <span className={"order-user-addr"}>
-                  <img
-                    src={"/icons/location.svg"}
-                    alt=""
-                    className={"inline-icon"}
-                  />
+                  <LocationOnIcon className={"inline-icon"} />
                   {authMember}
                 </span>
               </Box>
@@ -91,28 +90,28 @@ export function UserPage() {
                   className={"social-link facebook"}
                   aria-label="Facebook"
                 >
-                  <img src={"/icons/Facebook.png"} alt="Facebook" />
+                  <FacebookIcon />
                 </a>
                 <a
                   href="#"
                   className={"social-link instagram"}
                   aria-label="Instagram"
                 >
-                  <img src={"/icons/Instagram.png"} alt="Instagram" />
+                  <InstagramIcon />
                 </a>
                 <a
                   href="#"
                   className={"social-link twitter"}
                   aria-label="Twitter"
                 >
-                  <img src={"/icons/Twitter.png"} alt="Twitter" />
+                  <TwitterIcon />
                 </a>
                 <a
                   href="#"
                   className={"social-link youtube"}
                   aria-label="YouTube"
                 >
-                  <img src={"/icons/YouTube.png"} alt="YouTube" />
+                  <YouTubeIcon />
                 </a>
               </div>
             </Box>

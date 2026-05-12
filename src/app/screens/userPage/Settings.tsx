@@ -2,6 +2,13 @@ import { Box } from "@mui/material";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import PetsIcon from "@mui/icons-material/Pets";
+import PersonIcon from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import NoteAltIcon from "@mui/icons-material/NoteAlt";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 
 export function Settings() {
   const { authMember, setAuthMember } = useGlobals();
@@ -29,7 +36,7 @@ export function Settings() {
 
         <div className={"media-change-box"}>
           <div className={"upload-label"}>
-            <img src={"/icons/camera.svg"} alt="" className={"upload-icon"} />
+            <PhotoCameraIcon className={"upload-icon"} />
             <span>Upload Profile Photo</span>
           </div>
           <p className={"upload-hint"}>JPG, JPEG or PNG — max 5MB</p>
@@ -48,7 +55,7 @@ export function Settings() {
 
       {/* ── Section Heading ── */}
       <div className={"section-heading"}>
-        <img src={"/icons/paw-small.svg"} alt="" />
+        <PetsIcon sx={{ fontSize: 14, opacity: 0.6 }} />
         <span>Basic Information</span>
       </div>
 
@@ -56,7 +63,7 @@ export function Settings() {
       <Box className={"input-frame"}>
         <div className={"long-input"}>
           <label className={"spec-label"}>
-            <img src={"/icons/user-line.svg"} alt="" className={"label-icon"} />
+            <PersonIcon className={"label-icon"} />
             Username
           </label>
           <input
@@ -74,11 +81,7 @@ export function Settings() {
       <Box className={"input-frame"}>
         <div className={"short-input"}>
           <label className={"spec-label"}>
-            <img
-              src={"/icons/phone-line.svg"}
-              alt=""
-              className={"label-icon"}
-            />
+            <PhoneIcon className={"label-icon"} />
             Phone
           </label>
           <input
@@ -93,11 +96,7 @@ export function Settings() {
 
         <div className={"short-input"}>
           <label className={"spec-label"}>
-            <img
-              src={"/icons/location-line.svg"}
-              alt=""
-              className={"label-icon"}
-            />
+            <LocationOnIcon className={"label-icon"} />
             Address
           </label>
           <input
@@ -113,15 +112,15 @@ export function Settings() {
 
       {/* ── Section Heading ── */}
       <div className={"section-heading"}>
-        <img src={"/icons/paw-small.svg"} alt="" />
-        <span>About Me & My Pets</span>
+        <PetsIcon sx={{ fontSize: 14, opacity: 0.6 }} />
+        <span>About Me &amp; My Pets</span>
       </div>
 
       {/* ── Description ── */}
       <Box className={"input-frame"}>
         <div className={"long-input"}>
           <label className={"spec-label"}>
-            <img src={"/icons/note-line.svg"} alt="" className={"label-icon"} />
+            <NoteAltIcon className={"label-icon"} />
             Description
           </label>
           <textarea
@@ -143,7 +142,7 @@ export function Settings() {
         <Button
           variant={"contained"}
           className={"save-btn"}
-          startIcon={<img src={"/icons/paw-save.svg"} alt="" />}
+          startIcon={<SaveAltIcon />}
         >
           Save Changes
         </Button>
