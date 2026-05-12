@@ -63,6 +63,12 @@ export function HomeNavbar(): React.JSX.Element {
               Help
             </NavLink>
           </Box>
+
+          <Box component="li">
+            <NavLink to="/help" className={getNavLinkClassName}>
+              Veterinary
+            </NavLink>
+          </Box>
         </Stack>
 
         {/* ACTIONS */}

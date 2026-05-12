@@ -1,0 +1,479 @@
+/* =============================================
+   PetFood Help Page — help.css
+   Aesthetic: Warm, organic, playful & natural
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  --cream: #fdf6ec;
+  --warm-white: #fffaf3;
+  --amber: #f59e0b;
+  --amber-light: #fcd34d;
+  --amber-dark: #b45309;
+  --brown: #7c3f1e;
+  --brown-light: #a0522d;
+  --green: #4a7c59;
+  --green-light: #86c197;
+  --green-pale: #d4edda;
+  --sand: #e9d5b0;
+  --sand-dark: #c9a96e;
+  --text-primary: #2d1a0e;
+  --text-secondary: #6b4226;
+  --text-muted: #9a7560;
+  --shadow-sm: 0 2px 8px rgba(124, 63, 30, 0.1);
+  --shadow-md: 0 6px 24px rgba(124, 63, 30, 0.15);
+  --shadow-lg: 0 12px 48px rgba(124, 63, 30, 0.2);
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Nunito', sans-serif;
+}
+
+/* ── Base Reset ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Page Wrapper ── */
+.help-page {
+  min-height: 100vh;
+  background-color: var(--cream);
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 75%, rgba(74, 124, 89, 0.1) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a96e' fill-opacity='0.05'%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3Ccircle cx='30' cy='5' r='2'/%3E%3Ccircle cx='50' cy='12' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  font-family: var(--font-body);
+  padding-bottom: 80px;
+}
+
+/* ── Hero Header ── */
+.help-hero {
+  background: linear-gradient(135deg, var(--green-light) 0%, var(--green) 60%, var(--amber) 100%);
+  padding: 56px 24px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  clip-path: ellipse(100% 85% at 50% 0%);
+}
+
+.help-hero::before {
+  content: '🐾';
+  position: absolute;
+  font-size: 180px;
+  opacity: 0.06;
+  top: -20px;
+  left: -30px;
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+
+.help-hero::after {
+  content: '🐾';
+  position: absolute;
+  font-size: 140px;
+  opacity: 0.06;
+  bottom: 0px;
+  right: -20px;
+  transform: rotate(15deg);
+  pointer-events: none;
+}
+
+.help-hero-title {
+  font-family: var(--font-display) !important;
+  font-size: clamp(2rem, 5vw, 3.2rem) !important;
+  font-weight: 800 !important;
+  color: #fff !important;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  margin-bottom: 12px !important;
+}
+
+.help-hero-subtitle {
+  font-family: var(--font-body) !important;
+  font-size: 1rem !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+}
+
+/* ── Container ── */
+.help-container {
+  max-width: 860px !important;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ── Tab Navigation ── */
+.help-menu {
+  background: var(--warm-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-top: -36px;
+  margin-bottom: 32px;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  border: 2px solid var(--sand);
+}
+
+.help-menu .MuiTabs-root {
+  min-height: 64px;
+  padding: 0 8px;
+}
+
+.help-menu .MuiTabs-indicator {
+  background: linear-gradient(90deg, var(--amber), var(--amber-dark)) !important;
+  height: 3px !important;
+  border-radius: 3px 3px 0 0 !important;
+}
+
+.help-menu .MuiTab-root {
+  font-family: var(--font-body) !important;
+  font-weight: 800 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 1.5px !important;
+  color: var(--text-muted) !important;
+  min-height: 64px !important;
+  padding: 0 28px !important;
+  transition: color 0.2s, background 0.2s !important;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.help-menu .MuiTab-root:hover {
+  color: var(--amber-dark) !important;
+  background: rgba(245, 158, 11, 0.06) !important;
+}
+
+.help-menu .Mui-selected {
+  color: var(--brown) !important;
+}
+
+/* ── Main Content Panel ── */
+.help-main-content {
+  background: transparent;
+}
+
+.help-main-content .MuiTabPanel-root {
+  padding: 0 !important;
+  animation: fadeSlideUp 0.35s ease both;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ══════════════════════════════
+   TAB 1 — TERMS
+══════════════════════════════ */
+.rules-box {
+  gap: 0;
+}
+
+.rules-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rules-header-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.rules-header-text {
+  font-family: var(--font-display) !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: var(--brown) !important;
+}
+
+.rules-frame {
+  background: var(--warm-white);
+  border: 2px solid var(--sand);
+  border-radius: var(--radius-md);
+  padding: 36px 40px;
+  box-shadow: var(--shadow-sm);
+  max-height: 520px;
+  overflow-y: auto;
+  line-height: 1.9;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sand-dark) transparent;
+  position: relative;
+}
+
+.rules-frame::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amber), var(--green-light), var(--amber-dark));
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.rules-frame::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rules-frame::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rules-frame::-webkit-scrollbar-thumb {
+  background: var(--sand-dark);
+  border-radius: 99px;
+}
+
+.rules-frame p {
+  font-family: var(--font-body);
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed var(--sand);
+}
+
+.rules-frame p:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* ══════════════════════════════
+   TAB 2 — FAQ
+══════════════════════════════ */
+.accordion-menu {
+  gap: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.accordion-menu .MuiAccordion-root {
+  background: var(--warm-white) !important;
+  border: 2px solid var(--sand) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-sm) !important;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+  margin: 0 !important;
+}
+
+.accordion-menu .MuiAccordion-root::before {
+  display: none !important;
+}
+
+.accordion-menu .MuiAccordion-root:hover {
+  border-color: var(--amber) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.accordion-menu .Mui-expanded.MuiAccordion-root {
+  border-color: var(--amber) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.accordion-menu .MuiAccordionSummary-root {
+  padding: 6px 24px !important;
+  min-height: 60px !important;
+}
+
+.accordion-menu .MuiAccordionSummary-expandIconWrapper {
+  color: var(--amber-dark) !important;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 50%;
+  padding: 4px;
+  transition: background 0.2s !important;
+}
+
+.accordion-menu .Mui-expanded .MuiAccordionSummary-expandIconWrapper {
+  background: var(--amber) !important;
+  color: #fff !important;
+}
+
+.accordion-menu .MuiAccordionSummary-content .MuiTypography-root {
+  font-family: var(--font-body) !important;
+  font-weight: 800 !important;
+  font-size: 0.97rem !important;
+  color: var(--text-primary) !important;
+}
+
+.accordion-menu .MuiAccordionDetails-root {
+  background: linear-gradient(135deg, var(--cream) 0%, rgba(245, 158, 11, 0.05) 100%) !important;
+  border-top: 1px solid var(--sand) !important;
+  padding: 20px 24px !important;
+}
+
+.accordion-menu .MuiAccordionDetails-root .MuiTypography-root {
+  font-family: var(--font-body) !important;
+  font-size: 0.92rem !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.75 !important;
+}
+
+/* ══════════════════════════════
+   TAB 3 — CONTACT
+══════════════════════════════ */
+.admin-letter-box {
+  align-items: center;
+}
+
+.admin-letter-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background: var(--warm-white);
+  border: 2px solid var(--sand);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-letter-header {
+  background: linear-gradient(135deg, var(--brown) 0%, var(--amber-dark) 100%);
+  padding: 36px 40px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-letter-header::after {
+  content: '✉️';
+  position: absolute;
+  font-size: 80px;
+  right: 20px;
+  top: 10px;
+  opacity: 0.18;
+  transform: rotate(-8deg);
+}
+
+.admin-letter-header span {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.admin-letter-header p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+  font-weight: 600;
+}
+
+.admin-letter-form {
+  padding: 36px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.admin-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-input-box label {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.admin-input-box input,
+.admin-input-box textarea {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--cream);
+  border: 2px solid var(--sand);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+  resize: none;
+}
+
+.admin-input-box input::placeholder,
+.admin-input-box textarea::placeholder {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.admin-input-box input:focus,
+.admin-input-box textarea:focus {
+  border-color: var(--amber);
+  background: var(--warm-white);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+}
+
+.admin-input-box textarea {
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+/* ── Send Button ── */
+.contact-send-btn.MuiButton-root {
+  font-family: var(--font-body) !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase !important;
+  background: linear-gradient(135deg, var(--brown) 0%, var(--amber-dark) 100%) !important;
+  color: #fff !important;
+  padding: 12px 36px !important;
+  border-radius: 50px !important;
+  box-shadow: 0 4px 16px rgba(124, 63, 30, 0.35) !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+
+.contact-send-btn.MuiButton-root:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(124, 63, 30, 0.4) !important;
+}
+
+.contact-send-btn.MuiButton-root:active {
+  transform: translateY(0) !important;
+}
+
+/* ── Section Badges ── */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(90deg, var(--amber-light), var(--amber));
+  color: var(--brown);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}

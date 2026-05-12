@@ -62,6 +62,12 @@ export function OtherNavbar(): React.JSX.Element {
                 Help
               </NavLink>
             </Box>
+
+            <Box component="li">
+              <NavLink to="/help" className={getNavLinkClassName}>
+                Veterinary
+              </NavLink>
+            </Box>
           </Stack>
 
           <Stack className="navbar-actions" direction="row">

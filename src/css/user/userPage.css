@@ -13,6 +13,8 @@
   --pf-primary-light:#FFF0E4;
   --pf-secondary:    #3A7D44;   /* forest green */
   --pf-secondary-lt: #EAF5EC;
+  --green: #4a7c59;
+  --green-light: #86c197;
   --pf-accent:       #F9C846;   /* sunny yellow */
   --pf-cream:        #FDF8F2;
   --pf-card-bg:      #FFFFFF;
@@ -47,8 +49,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--pf-primary-light);
-  color: var(--pf-primary-dark);
+  background: var(--green);
+  color: #ffffff;
   border-radius: 100px;
   padding: 6px 16px;
   font-size: 13px;
@@ -225,7 +227,7 @@
   font-family: var(--pf-font-display);
   font-size: 14px;
   font-weight: 700;
-  color: var(--pf-text-mid);
+  color: var(--green);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin: 4px 0 14px;
@@ -293,8 +295,8 @@
 }
 
 .spec-input:focus {
-  border-color: var(--pf-primary);
-  box-shadow: 0 0 0 3px rgba(240,122,42,0.13);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(74,124,89,0.15);
 }
 
 .spec-textarea {
@@ -318,8 +320,8 @@
 }
 
 .spec-textarea:focus {
-  border-color: var(--pf-primary);
-  box-shadow: 0 0 0 3px rgba(240,122,42,0.13);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(74,124,89,0.15);
 }
 
 /* ── Save Button ── */
@@ -379,7 +381,7 @@
   border-radius: 50%;
   padding: 3px;
   background: linear-gradient(135deg, var(--pf-primary), var(--pf-accent));
-  box-shadow: var(--pf-shadow-md);
+  box-shadow: 0 4px 16px rgba(74,124,89,0.35);
 }
 
 .order-user-avatar {
@@ -423,8 +425,8 @@
 
 .member-type-tag {
   display: inline-block;
-  background: var(--pf-secondary-lt);
-  color: var(--pf-secondary);
+  background: var(--green-light);
+  color: var(--green);
   font-size: 12px;
   font-weight: 700;
   padding: 4px 12px;
@@ -453,7 +455,7 @@
   align-items: center;
   gap: 10px;
   margin: 20px 0 12px;
-  color: var(--pf-text-light);
+  color: var(--green);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
