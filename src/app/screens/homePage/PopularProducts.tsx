@@ -7,51 +7,56 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import PetsIcon from "@mui/icons-material/Pets";
 import "./../../../css/home/popularProducts.css";
 
-// ─── Types ───────────────────────────────────────────────────────
-interface Product {
-  id: number;
-  name: string;
-  views: number;
-  description: string;
-  image: string;
-}
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
+import { retrievePopularProducts } from "./selector";
+import { Product } from "../../../lib/types/product";
+import { serverApi } from "../../../lib/config";
 
-// ─── Mock data ────────────────────────────────────────────────────
-const PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: "Royal Canin",
-    views: 37,
-    description: "Premium dry food for medium adult dogs...",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-  },
-  {
-    id: 2,
-    name: "Whiskas Tuna",
-    views: 29,
-    description: "Tender tuna chunks in jelly for cats...",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-  },
-  {
-    id: 3,
-    name: "Pedigree Snack",
-    views: 21,
-    description: "Crunchy dental treats for healthy teeth...",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-  },
-  {
-    id: 4,
-    name: "Pedigree Snack",
-    views: 21,
-    description: "Crunchy dental treats for healthy teeth...",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-  },
-];
+const popularProductsRetriever = createSelector(
+  retrievePopularProducts,
+  (popularProducts) => ({ popularProducts }),
+);
+
+// ─── Main section ─────────────────────────────────────────────────
+export default function PopularProducts(): React.JSX.Element {
+  const { popularProducts } = useSelector(popularProductsRetriever);
+
+  return (
+    <div className="popular-products-frame">
+      <Container>
+        <Stack className="popular-section">
+          <Box className="category-title">
+            <PetsIcon className="category-title__pets-icon" />
+            Popular Products
+            <PetsIcon className="category-title__pets-icon" />
+          </Box>
+          <Stack className="cards-frame">
+            {popularProducts.length !== 0 ? (
+              popularProducts.map((ele: Product) => (
+                <ProductCard key={ele._id} product={ele} />
+              ))
+            ) : (
+              <Box className="no-data-box">
+                <span className="no-data-box__icon">🐾</span>
+                <span className="no-data-box__text">
+                  Popular products are not available!!!
+                </span>
+              </Box>
+            )}
+          </Stack>
+        </Stack>
+      </Container>
+    </div>
+  );
+}
 
 // ─── Product Card ─────────────────────────────────────────────────
 function ProductCard({ product }: { product: Product }) {
-  const [imgError, setImgError] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [imgError, setImgError] = useState<boolean>(false);
+  const [liked, setLiked] = useState<boolean>(false);
+
+  const imagePath = `${serverApi}/${product.productImages[0]}`;
 
   return (
     <Box className="pop-card">
@@ -59,21 +64,26 @@ function ProductCard({ product }: { product: Product }) {
       <Box
         className="pop-card__image"
         style={{
-          backgroundImage: imgError ? undefined : `url(${product.image})`,
+          backgroundImage: imgError ? undefined : `url(${imagePath})`,
         }}
-        onError={() => setImgError(true)}
       >
+        <img
+          src={imagePath}
+          alt={product.productName}
+          style={{ display: "none" }}
+          onError={() => setImgError(true)}
+        />
         {imgError && <Box className="pop-card__fallback">🐾</Box>}
       </Box>
 
       {/* Gradient overlay: name + views + like */}
       <Box className="pop-card__overlay">
         <Box className="pop-card__info-row">
-          <span className="pop-card__name">{product.name}</span>
+          <span className="pop-card__name">{product.productName}</span>
           <Box className="pop-card__overlay-right">
             <span className="pop-card__views">
               <VisibilityIcon className="pop-card__eye-icon" />
-              {product.views}
+              {product.productViews}
             </span>
             <Box
               component="button"
@@ -94,39 +104,8 @@ function ProductCard({ product }: { product: Product }) {
       {/* Description strip */}
       <Box className="pop-card__desc-strip">
         <DescriptionOutlinedIcon className="pop-card__desc-icon" />
-        <span className="pop-card__desc-text">{product.description}</span>
+        <span className="pop-card__desc-text">{product.productDesc}</span>
       </Box>
     </Box>
-  );
-}
-
-// ─── Main section ─────────────────────────────────────────────────
-export default function PopularProducts(): React.JSX.Element {
-  return (
-    <div className="popular-products-frame">
-      <Container>
-        <Stack className="popular-section">
-          <Box className="category-title">
-            <PetsIcon className="category-title__pets-icon" />
-            Popular Products
-            <PetsIcon className="category-title__pets-icon" />
-          </Box>
-          <Stack className="cards-frame">
-            {PRODUCTS.length !== 0 ? (
-              PRODUCTS.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            ) : (
-              <Box className="no-data-box">
-                <span className="no-data-box__icon">🐾</span>
-                <span className="no-data-box__text">
-                  Popular products are not available!!!
-                </span>
-              </Box>
-            )}
-          </Stack>
-        </Stack>
-      </Container>
-    </div>
   );
 }
