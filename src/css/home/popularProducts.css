@@ -104,8 +104,6 @@
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
 }
 
 .pop-card__views {

@@ -9,7 +9,7 @@ import Events from "./Events";
 
 import { useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
-import { setPopularProducts } from "./slice";
+import { setNewProducts, setPopularProducts } from "./slice";
 import { Product } from "../../../lib/types/product";
 import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
@@ -17,10 +17,11 @@ import { ProductCollection } from "../../../lib/enums/product.enum";
 /*** Redux slice & Selector ***/
 const actionDispatch = (dispatch: Dispatch) => ({
   setPopularProducts: (data: Product[]) => dispatch(setPopularProducts(data)),
+  setNewProducts: (data: Product[]) => dispatch(setNewProducts(data)),
 });
 
 export default function HomeScreen(): React.JSX.Element {
-  const { setPopularProducts } = actionDispatch(useDispatch());
+  const { setPopularProducts, setNewProducts } = actionDispatch(useDispatch());
   // Selector: Store => Data
 
   useEffect(() => {
@@ -38,6 +39,19 @@ export default function HomeScreen(): React.JSX.Element {
       })
       .catch((err) => {
         console.log("Error fetching popular products: ", err);
+      });
+
+    product
+      .getProducts({
+        page: 1,
+        limit: 4,
+        order: "createdAt",
+      })
+      .then((data) => {
+        setNewProducts(data);
+      })
+      .catch((err) => {
+        console.log("Error fetching new products: ", err);
       });
     // Slice: Data => Store
   }, []);
