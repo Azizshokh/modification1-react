@@ -134,9 +134,17 @@
 }
 
 .user-card__points {
+  display: flex;
+  align-items: center;
+  gap: 3px;
   font-size: 12px;
   font-weight: 600;
   color: #cc7a08;
+}
+
+.user-card__star-icon {
+  font-size: 14px !important;
+  color: #cc7a08 !important;
 }
 
 /* ── No-data state ── */

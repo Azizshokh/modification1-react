@@ -1,25 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Container, Stack } from "@mui/material";
 import PetsIcon from "@mui/icons-material/Pets";
+import StarIcon from "@mui/icons-material/Star";
 import "./../../../css/home/activeUsers.css";
 
-// ─── Types ───────────────────────────────────────────────────────
-interface Member {
-  id: number;
-  nick: string;
-  points: number;
-  image: string;
-}
+import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
+import { retrieveTopUsers } from "./selector";
+import { Member } from "../../../lib/types/member";
+import { serverApi } from "../../../lib/config";
 
-// ─── Mock data ────────────────────────────────────────────────────
-const MEMBERS: Member[] = [
-  { id: 1, nick: "PawLover", points: 320, image: "/img/justin.jpeg" },
-  { id: 2, nick: "CatMom99", points: 280, image: "/img/justin.jpeg" },
-  { id: 3, nick: "DogDad_K", points: 215, image: "/img/justin.jpeg" },
-  { id: 4, nick: "FurFriend", points: 190, image: "/img/justin.jpeg" },
-];
+/** Redux Slice & Selector **/
+const topUsersRetriever = createSelector(retrieveTopUsers, (topUsers) => ({
+  topUsers,
+}));
 
 export default function ActiveUsers(): React.JSX.Element {
+  const { topUsers } = useSelector(topUsersRetriever);
+
   return (
     <div className="active-users-frame">
       <Container>
@@ -33,30 +31,52 @@ export default function ActiveUsers(): React.JSX.Element {
 
           {/* ── Cards grid ── */}
           <Stack className="active-users__cards">
-            {MEMBERS.map((member) => (
-              <Box key={member.id} className="user-card">
-                {/* Full image */}
-                <Box className="user-card__img-wrap">
-                  <img
-                    src={member.image}
-                    alt={member.nick}
-                    className="user-card__img"
-                  />
-                  <span className="user-card__online-dot" />
-                </Box>
-
-                {/* Name below image */}
-                <Box className="user-card__info">
-                  <span className="user-card__name">{member.nick}</span>
-                  <span className="user-card__points">
-                    🐾 {member.points} pts
-                  </span>
-                </Box>
-              </Box>
-            ))}
+            {topUsers.length !== 0 ? (
+              topUsers.map((member: Member) => (
+                <UserCard key={member._id} member={member} />
+              ))
+            ) : (
+              <Box className="active-users__no-data">No Active Users</Box>
+            )}
           </Stack>
         </Stack>
       </Container>
     </div>
+  );
+}
+
+// ─── User Card ────────────────────────────────────────────────────
+function UserCard({ member }: { member: Member }) {
+  const [imgError, setImgError] = useState<boolean>(false);
+  const imagePath = member.memberImage
+    ? `${serverApi}/${member.memberImage}`
+    : "/img/default-user.png";
+
+  return (
+    <Box className="user-card">
+      {/* Image */}
+      <Box className="user-card__img-wrap">
+        {!imgError ? (
+          <img
+            src={imagePath}
+            alt={member.memberNick}
+            className="user-card__img"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <Box className="user-card__img-fallback">🐾</Box>
+        )}
+        <span className="user-card__online-dot" />
+      </Box>
+
+      {/* Name + points */}
+      <Box className="user-card__info">
+        <span className="user-card__name">{member.memberNick}</span>
+        <span className="user-card__points">
+          <StarIcon className="user-card__star-icon" />
+          {member.memberPoints}
+        </span>
+      </Box>
+    </Box>
   );
 }
