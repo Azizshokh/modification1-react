@@ -94,6 +94,9 @@
 
 .my-page-right {
   flex: 1;
+  position: sticky;
+  top: 24px;
+  align-self: flex-start;   /* required for sticky to work inside flex */
 }
 
 /* ── Section Label ── */
@@ -307,6 +310,7 @@
 
 .spec-textarea {
   width: 100%;
+  height: 235px;
   padding: 11px 14px;
   border: 1.5px solid var(--pf-border);
   border-radius: var(--pf-radius-sm);
@@ -371,8 +375,8 @@
   border: 1.5px solid var(--pf-border);
   box-shadow: var(--pf-shadow-sm);
   padding: 28px 24px 24px;
-  position: sticky;
-  top: 24px;
+  position: relative;
+  margin-top: 45px;
 }
 
 /* Avatar */
@@ -388,6 +392,7 @@
   padding: 3px;
   background: linear-gradient(135deg, var(--pf-primary), var(--pf-accent));
   box-shadow: 0 4px 16px rgba(74,124,89,0.35);
+  box-sizing: border-box;
 }
 
 .order-user-icon-box {
@@ -544,6 +549,386 @@
 }
 
 .social-link.facebook:hover { background: #EBF0FA; border-color: #1877F2; }
+.social-link.facebook:hover svg { color: #1877F2; }
 .social-link.instagram:hover { background: #FDF0F8; border-color: #E1306C; }
+.social-link.instagram:hover svg { color: #E1306C; }
+.social-link.telegram:hover { background: #E8F4FB; border-color: #229ED9; }
+.social-link.telegram:hover svg { color: #229ED9; }
 .social-link.youtube:hover   { background: #FDECEA; border-color: #FF0000; }
+.social-link.youtube:hover svg { color: #FF0000; }
+
+.social-link svg {
+  color: var(--pf-text-mid);
+  transition: color 0.2s ease;
+}
+
+/* ── Avatar image inside ring ── */
+.avatar-ring {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--pf-cream);
+  border: 3px solid #fff;
+  box-sizing: border-box;
+  display: block;
+}
+
+/* ── Member-type-tag: flex w/ icon ── */
+.member-type-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Stat number with icon ── */
+.stat-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--pf-font-display);
+  font-weight: 700;
+  color: var(--pf-text-dark);
+}
+
+/* ── Profile-divider paw icons ── */
+.profile-divider svg {
+  color: var(--green);
+  opacity: 0.7;
+}
+
+/* ── Pet stats hover lift ── */
+.pet-stats {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pet-stats:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--pf-shadow-sm);
+}
+
+/* ── Decorative paw print watermark on profile card ── */
+.order-info-box {
+  position: sticky;
+  overflow: hidden;
+}
+
+.order-info-box::before {
+  content: "🐾";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 80px;
+  opacity: 0.04;
+  pointer-events: none;
+  transform: rotate(20deg);
+}
+
+/* ── Page header paw flourish ── */
+.page-header {
+  position: relative;
+}
+
+.page-header::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 14px auto 0;
+  background: linear-gradient(90deg, var(--pf-primary), var(--pf-accent));
+  border-radius: 3px;
+}
+
+/* ── Order-user-prof (fallback text styling) ── */
+.order-user-prof {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--pf-text-mid);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* ── Settings card subtle hover ── */
+.menu-content {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  height: 807px;
+}
+
+.menu-content:hover {
+  box-shadow: var(--pf-shadow-md);
+}
+
+/* ── Form input hover ── */
+.spec-input:hover,
+.spec-textarea:hover {
+  border-color: var(--pf-primary);
+}
+
+.payment-card-box {
+  position: relative;        /* override sticky from .order-info-box */
+  top: auto;
+  margin-top: 22px;
+  padding: 22px 22px 20px;
+  background:
+    linear-gradient(180deg, #fff 0%, var(--pf-cream) 100%);
+  border: 1.5px solid var(--pf-border);
+  border-radius: var(--pf-radius-lg);
+  box-shadow: var(--pf-shadow-sm);
+  overflow: hidden;
+}
+
+/* Disable the inherited 🐾 watermark on the payment card */
+.payment-card-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--pf-primary),
+    var(--pf-accent),
+    var(--green)
+  );
+  transform: none;
+  font-size: 0;
+  opacity: 1;
+}
+
+/* Subtle 💳 watermark unique to this card */
+.payment-card-box::after {
+  content: "💳";
+  position: absolute;
+  bottom: -14px;
+  right: -10px;
+  font-size: 88px;
+  opacity: 0.05;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.payment-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--pf-font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--pf-text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+.payment-card-heading .payment-card-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px !important;
+  color: var(--pf-primary);
+}
+
+/* ─── Inputs ─── */
+.cc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.cc-half { flex: 1; }
+
+.cc-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--pf-text-mid);
+  text-transform: uppercase;
+}
+
+.cc-label-icon {
+  font-size: 13px !important;
+  width: 13px;
+  height: 13px;
+  color: var(--pf-primary);
+  opacity: 0.85;
+}
+
+.card-input,
+.card-half-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--pf-border);
+  border-radius: var(--pf-radius-sm);
+  font-family: var(--pf-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--pf-text-dark);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.card-input::placeholder,
+.card-half-input::placeholder {
+  color: var(--pf-text-light);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.card-input:focus,
+.card-half-input:focus {
+  border-color: var(--pf-primary);
+  box-shadow: 0 0 0 3px rgba(240,122,42,0.14);
+  background: #fffaf3;
+}
+
+.card-input:hover,
+.card-half-input:hover {
+  border-color: var(--pf-primary);
+}
+
+/* ─── Accepted brands ─── */
+.cc-accepted-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 18px 0 10px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.cc-accepted-label svg { color: var(--green); }
+
+.cards-box {
+  flex-direction: row !important;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 0 !important;
+  padding-top: 12px;
+  border-top: 1.5px dashed var(--pf-border);
+}
+
+.pay-brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  height: 38px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1.5px solid var(--pf-border);
+  transition: transform 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, background 0.18s ease;
+  cursor: pointer;
+  overflow: hidden;
+  user-select: none;
+}
+
+.pay-brand:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(45,32,22,0.10);
+}
+
+.pay-brand-text {
+  font-family: var(--pf-font-display);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* Mastercard — two overlapping circles */
+.pay-mastercard:hover { border-color: #EB001B; background: #FFF5F5; }
+
+.mc-circles {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 26px;
+  height: 16px;
+}
+
+.mc-red,
+.mc-yellow {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.mc-red    { left: 0;  background: #EB001B; }
+.mc-yellow { right: 0; background: #F79E1B; mix-blend-mode: multiply; }
+
+.pay-mastercard .pay-brand-text {
+  font-size: 10px;
+  color: var(--pf-text-dark);
+  text-transform: uppercase;
+}
+
+/* Visa */
+.pay-visa:hover { border-color: #1A1F71; background: #EEF0FA; }
+
+.visa-text {
+  color: #1A1F71;
+  font-style: italic;
+  font-size: 15px !important;
+  letter-spacing: 0.06em !important;
+}
+
+/* PayPal */
+.pay-paypal:hover { border-color: #009CDE; background: #E8F4FB; }
+
+.paypal-text {
+  display: inline-flex;
+  font-size: 13px !important;
+}
+
+.pp-blue { color: #003087; }
+.pp-navy { color: #009CDE; }
+
+/* Western Union */
+.pay-western:hover { border-color: #FFDD00; background: #FFFBE6; }
+
+.wu-text {
+  color: #2D2016;
+  background: linear-gradient(135deg, #FFDD00 0%, #F7B500 100%);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px !important;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+/* Responsive tightening */
+@media (max-width: 380px) {
+  .cc-number { font-size: 14px; letter-spacing: 0.05em; }
+  .pay-brand-text { font-size: 10px; }
+  .visa-text { font-size: 13px !important; }
+}
 
