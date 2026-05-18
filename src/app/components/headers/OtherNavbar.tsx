@@ -5,9 +5,24 @@ import PersonIcon from "@mui/icons-material/Person";
 import { NavLink } from "react-router-dom";
 
 import Basket from "./Basket";
+import type { CartItem } from "../../../lib/types/search";
 import "../../../css/otherNavbar.css";
 
-export function OtherNavbar(): React.JSX.Element {
+interface OtherNavbarProps {
+  cartItems: CartItem[];
+  onRemove: (_id: string) => void;
+  onIncrease: (_id: string) => void;
+  onDecrease: (_id: string) => void;
+  onClearAll: () => void;
+}
+
+export function OtherNavbar({
+  cartItems,
+  onRemove,
+  onIncrease,
+  onDecrease,
+  onClearAll,
+}: OtherNavbarProps): React.JSX.Element {
   // Test uchun: true qilsangiz Login o'rniga user icon chiqadi.
   const authMember: boolean | null = true;
 
@@ -71,7 +86,13 @@ export function OtherNavbar(): React.JSX.Element {
           </Stack>
 
           <Stack className="navbar-actions" direction="row">
-            <Basket />
+            <Basket
+              cartItems={cartItems}
+              onRemove={onRemove}
+              onIncrease={onIncrease}
+              onDecrease={onDecrease}
+              onClearAll={onClearAll}
+            />
 
             {!authMember ? (
               <Button

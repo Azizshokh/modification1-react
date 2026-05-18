@@ -5,9 +5,18 @@ import PersonIcon from "@mui/icons-material/Person";
 import { NavLink } from "react-router-dom";
 
 import Basket from "./Basket";
+import type { CartItem } from "../../../lib/types/search";
 import "../../../css/homeNavbar.css";
 
-export function HomeNavbar(): React.JSX.Element {
+interface HomeNavbarProps {
+  cartItems: CartItem[];
+  onRemove: (_id: string) => void;
+  onIncrease: (_id: string) => void;
+  onDecrease: (_id: string) => void;
+  onClearAll: () => void;
+}
+
+export function HomeNavbar({ cartItems, onRemove, onIncrease, onDecrease, onClearAll }: HomeNavbarProps): React.JSX.Element {
   // Test uchun: true qilsangiz user icon + Orders/MyPage chiqadi, null holatda Login + SignUp chiqadi.
   const authMember: boolean | null = null;
 
@@ -75,7 +84,7 @@ export function HomeNavbar(): React.JSX.Element {
 
         {/* ACTIONS */}
         <Stack className="navbar-actions" direction="row">
-          <Basket />
+          <Basket cartItems={cartItems} onRemove={onRemove} onIncrease={onIncrease} onDecrease={onDecrease} onClearAll={onClearAll} />
 
           {!authMember ? (
             <>

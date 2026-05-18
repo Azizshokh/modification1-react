@@ -39,6 +39,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./../../../css/product/product.css";
 import "./../../../css/product/nearestPlace.css";
+import { CartItem } from "../../../lib/types/search";
 
 /** Redux **/
 const actionDispatch = (dispatch: Dispatch) => ({
@@ -95,7 +96,13 @@ const SORT_OPTIONS = [
 
 const PAGE_LENGTHS = 8;
 
-const ProductsPage: React.FC = () => {
+interface ProductPageProps {
+  onAdd: (input: CartItem) => void;
+}
+
+const ProductsPage: React.FC<ProductPageProps> = ({
+  onAdd,
+}: ProductPageProps) => {
   const navigate = useNavigate();
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRetriever);
@@ -343,6 +350,13 @@ const ProductsPage: React.FC = () => {
                         className={`order-btn ${addedToCart === product._id ? "added" : ""}`}
                         fullWidth
                         onClick={(e) => {
+                          onAdd({
+                            _id: product._id,
+                            quantity: 1,
+                            name: product.productName,
+                            price: product.productPrice,
+                            image: product.productImages[0],
+                          });
                           e.stopPropagation();
                           handleAddToCart(product._id);
                         }}

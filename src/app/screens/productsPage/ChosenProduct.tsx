@@ -27,6 +27,7 @@ import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { serverApi } from "../../../lib/config";
 
+import { CartItem } from "../../../lib/types/search";
 import "./../../../css/product/chosenProduct.css";
 
 /** Redux **/
@@ -38,10 +39,13 @@ const chosenProductRetriever = createSelector(
   retrieveChosenProduct,
   (chosenProduct) => ({ chosenProduct }),
 );
+interface ProductPageProps {
+  onAdd: (input: CartItem) => void;
+}
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-const ChosenProduct: React.FC = () => {
+const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
   const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
   const { setChosenProduct } = actionDispatch(useDispatch());
@@ -69,6 +73,14 @@ const ChosenProduct: React.FC = () => {
   };
 
   const handleCart = () => {
+    if (!chosenProduct) return;
+    onAdd({
+      _id: chosenProduct._id,
+      quantity: 1,
+      name: chosenProduct.productName,
+      price: chosenProduct.productPrice,
+      image: chosenProduct.productImages[0],
+    });
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 1400);
   };

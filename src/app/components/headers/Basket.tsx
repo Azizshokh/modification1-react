@@ -13,23 +13,9 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 
+import type { CartItem } from "../../../lib/types/search";
+import { serverApi } from "../../../lib/config";
 import "../../../css/home/basket.css";
-
-// ─── Types ───────────────────────────────────────────────────────
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  qty: number;
-  emoji: string;
-}
-
-// ─── Initial cart data ───────────────────────────────────────────
-const INITIAL_ITEMS: CartItem[] = [
-  { id: 1, name: "Royal Canin Medium", price: 24.99, qty: 2, emoji: "🐾" },
-  { id: 2, name: "Pedigree Snacks", price: 8.5, qty: 1, emoji: "🦴" },
-  { id: 3, name: "Whiskas Cat Food", price: 12.0, qty: 1, emoji: "🐱" },
-];
 
 // ─── Sub-components ──────────────────────────────────────────────
 
@@ -70,31 +56,42 @@ function BasketItem({
   onDecrease,
 }: {
   item: CartItem;
-  onRemove: (id: number) => void;
-  onIncrease: (id: number) => void;
-  onDecrease: (id: number) => void;
+  onRemove: (_id: string) => void;
+  onIncrease: (_id: string) => void;
+  onDecrease: (_id: string) => void;
 }) {
   return (
     <div className="basket-item">
-      <div className="basket-item-thumb">{item.emoji}</div>
+      <div className="basket-item-thumb">
+        <img
+          src={`${serverApi}/${item.image}`}
+          alt={item.name}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "6px",
+          }}
+        />
+      </div>
 
       <div className="basket-item-info">
         <Typography className="basket-item-name">{item.name}</Typography>
         <Typography className="basket-item-price">
-          ${item.price.toFixed(2)} x {item.qty}
+          ${item.price.toFixed(2)} x {item.quantity}
         </Typography>
       </div>
 
       <QtyControl
-        qty={item.qty}
-        onIncrease={() => onIncrease(item.id)}
-        onDecrease={() => onDecrease(item.id)}
+        qty={item.quantity}
+        onIncrease={() => onIncrease(item._id)}
+        onDecrease={() => onDecrease(item._id)}
       />
 
       <IconButton
         size="small"
         className="basket-item-remove"
-        onClick={() => onRemove(item.id)}
+        onClick={() => onRemove(item._id)}
         aria-label={`Remove ${item.name}`}
       >
         <CancelIcon fontSize="small" />
@@ -119,10 +116,23 @@ function EmptyState() {
   );
 }
 
+interface BasketProps {
+  cartItems: CartItem[];
+  onRemove: (_id: string) => void;
+  onIncrease: (_id: string) => void;
+  onDecrease: (_id: string) => void;
+  onClearAll: () => void;
+}
+
 // ─── Main Basket component ───────────────────────────────────────
-export default function Basket() {
+export default function Basket({
+  cartItems,
+  onRemove,
+  onIncrease,
+  onDecrease,
+  onClearAll,
+}: BasketProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_ITEMS);
 
   const open = Boolean(anchorEl);
 
@@ -130,28 +140,9 @@ export default function Basket() {
     setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const handleRemove = (id: number) =>
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-
-  const handleClearAll = () => setCartItems([]);
-
-  const handleIncrease = (id: number) =>
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item,
-      ),
-    );
-
-  const handleDecrease = (id: number) =>
-    setCartItems((prev) =>
-      prev
-        .map((item) => (item.id === id ? { ...item, qty: item.qty - 1 } : item))
-        .filter((item) => item.qty > 0),
-    );
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.qty, 0);
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.qty,
+    (sum, item) => sum + item.price * item.quantity,
     0,
   );
 
@@ -200,7 +191,7 @@ export default function Basket() {
               {cartItems.length > 0 && (
                 <button
                   className="basket-clear-btn"
-                  onClick={handleClearAll}
+                  onClick={onClearAll}
                   aria-label="Clear all items"
                 >
                   <DeleteOutlineIcon />
@@ -216,11 +207,11 @@ export default function Basket() {
             ) : (
               cartItems.map((item) => (
                 <BasketItem
-                  key={item.id}
+                  key={item._id}
                   item={item}
-                  onRemove={handleRemove}
-                  onIncrease={handleIncrease}
-                  onDecrease={handleDecrease}
+                  onRemove={onRemove}
+                  onIncrease={onIncrease}
+                  onDecrease={onDecrease}
                 />
               ))
             )}
