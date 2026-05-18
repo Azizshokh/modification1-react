@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -10,8 +10,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Chip,
-  Rating,
   Tabs,
   Tab,
   Tooltip,
@@ -27,20 +25,28 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import EmailIcon from "@mui/icons-material/Email";
+
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
+import { createSelector } from "reselect";
+import { setProducts } from "./slice";
+import { retrieveProducts } from "./selector";
+import type { Product, ProductInquiry } from "../../../lib/types/product";
+import ProductService from "../../services/ProductService";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { serverApi } from "../../../lib/config";
+import { useNavigate } from "react-router-dom";
+
 import "./../../../css/product/product.css";
 import "./../../../css/product/nearestPlace.css";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  category: string;
-  tag?: "New" | "Sale" | "Popular";
-  image: string;
-  weight: string;
-}
+/** Redux **/
+const actionDispatch = (dispatch: Dispatch) => ({
+  setProducts: (data: Product[]) => dispatch(setProducts(data)),
+});
+const productsRetriever = createSelector(retrieveProducts, (products) => ({
+  products,
+}));
 
 interface ContactCardProps {
   icon: React.ReactNode;
@@ -60,196 +66,119 @@ function ContactCard({ icon, label, value }: ContactCardProps) {
   );
 }
 
-const PRODUCTS: Product[] = [
-  // Dogs (8)
-
-  {
-    id: 8,
-    name: "Chicken Senior Care",
-    price: 48000,
-    rating: 4.3,
-    reviews: 76,
-    category: "Dogs",
-    tag: "Sale",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "1.6 kg",
-  },
-
-  // Cats (8)
-  {
-    id: 11,
-    name: "Chicken Pate Deluxe",
-    price: 34000,
-    rating: 4.6,
-    reviews: 88,
-    category: "Cats",
-    tag: "New",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "650 g",
-  },
-  {
-    id: 12,
-    name: "Liver Boost Formula",
-    price: 32000,
-    rating: 4.4,
-    reviews: 64,
-    category: "Cats",
-    tag: "Sale",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "550 g",
-  },
-  {
-    id: 13,
-    name: "Indoor Cat Balance",
-    price: 39000,
-    rating: 4.5,
-    reviews: 91,
-    category: "Cats",
-    tag: "Popular",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "900 g",
-  },
-  {
-    id: 14,
-    name: "Hairball Control Mix",
-    price: 37000,
-    rating: 4.3,
-    reviews: 54,
-    category: "Cats",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "800 g",
-  },
-  {
-    id: 15,
-    name: "Salmon Sterilized Care",
-    price: 42000,
-    rating: 4.7,
-    reviews: 79,
-    category: "Cats",
-    tag: "New",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "1 kg",
-  },
-  {
-    id: 16,
-    name: "Multi-Vit Cat Crunch",
-    price: 31000,
-    rating: 4.2,
-    reviews: 48,
-    category: "Cats",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "600 g",
-  },
-
-  // Birds (8)
-  {
-    id: 17,
-    name: "Parrot Seed Blend",
-    price: 22000,
-    rating: 4.4,
-    reviews: 43,
-    category: "Birds",
-    tag: "Popular",
-    image: "/img/products/Cat_LP_DryFood_8.jpg",
-    weight: "1 kg",
-  },
+const CATEGORIES = [
+  { label: "All", value: null },
+  { label: "Dogs", value: ProductCollection.DOG },
+  { label: "Cats", value: ProductCollection.CAT },
+  { label: "Birds", value: ProductCollection.BIRD },
+  { label: "Fish", value: ProductCollection.FISH },
+  { label: "Gadgets", value: ProductCollection.GADGETS },
 ];
 
-const CATEGORIES = ["All", "Dogs", "Cats", "Birds", "Fish", "Gadgets"];
-
-const TAG_COLORS: Record<string, string> = {
-  New: "#4ade80",
-  Sale: "#f87171",
-  Popular: "#fb923c",
-};
-
 const SORT_OPTIONS = [
-  { key: "new", label: "NEW", icon: <AutoAwesomeIcon sx={{ fontSize: 14 }} /> },
   {
-    key: "price",
+    key: "createdAt",
+    label: "NEW",
+    icon: <AutoAwesomeIcon sx={{ fontSize: 14 }} />,
+  },
+  {
+    key: "productPrice",
     label: "PRICE",
     icon: <AttachMoneyIcon sx={{ fontSize: 14 }} />,
   },
   {
-    key: "views",
+    key: "productViews",
     label: "VIEWS",
     icon: <TrendingUpIcon sx={{ fontSize: 14 }} />,
   },
 ];
 
-const ITEMS_PER_PAGE = 8;
+const PAGE_LENGTHS = 8;
 
-const Product: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState(0);
-  const [cart, setCart] = useState<number[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]);
-  const [addedToCart, setAddedToCart] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeSort, setActiveSort] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
+const ProductsPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { setProducts } = actionDispatch(useDispatch());
+  const { products } = useSelector(productsRetriever);
 
-  const processedProducts = useMemo(() => {
-    const category = CATEGORIES[activeCategory];
-    let result =
-      category === "All"
-        ? PRODUCTS
-        : PRODUCTS.filter((p) => p.category === category);
+  const [productSearch, setProductSearch] = useState<ProductInquiry>({
+    page: 1,
+    limit: PAGE_LENGTHS + 1,
+    order: "createdAt",
+    productCollection: ProductCollection.DOG,
+    search: "",
+  });
+  const [searchText, setSearchText] = useState<string>("");
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [addedToCart, setAddedToCart] = useState<string | null>(null);
 
-    if (searchQuery.trim()) {
-      result = result.filter((p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
+  useEffect(() => {
+    const product = new ProductService();
+    setProducts([]);
+    product
+      .getProducts(productSearch)
+      .then((data) => setProducts(data))
+      .catch((err) => console.log(err));
+  }, [productSearch]);
+
+  useEffect(() => {
+    if (searchText === "") {
+      productSearch.search = "";
+      setProductSearch({ ...productSearch });
     }
+  }, [searchText]);
 
-    if (activeSort === "new") {
-      result = [
-        ...result.filter((p) => p.tag === "New"),
-        ...result.filter((p) => p.tag !== "New"),
-      ];
-    } else if (activeSort === "price") {
-      result = [...result].sort((a, b) => a.price - b.price);
-    } else if (activeSort === "views") {
-      result = [...result].sort((a, b) => b.reviews - a.reviews);
+  /** HANDLERS **/
+
+  const searchCollectionHandler = (collection: ProductCollection | null) => {
+    productSearch.page = 1;
+    productSearch.search = "";
+    if (collection) {
+      productSearch.productCollection = collection;
+    } else {
+      delete productSearch.productCollection;
     }
+    setProductSearch({ ...productSearch });
+    setSearchText("");
+  };
 
-    return result;
-  }, [activeCategory, searchQuery, activeSort]);
+  const searchOrderHandler = (order: string) => {
+    productSearch.page = 1;
+    productSearch.order = order;
+    setProductSearch({ ...productSearch });
+  };
 
-  const totalPages = Math.ceil(processedProducts.length / ITEMS_PER_PAGE);
-  const paginatedProducts = processedProducts.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE,
-  );
+  const searchProductHandler = () => {
+    productSearch.search = searchText;
+    productSearch.page = 1;
+    setProductSearch({ ...productSearch });
+  };
 
-  const handleAddToCart = (id: number) => {
-    setCart((prev) => [...prev, id]);
+  const paginationHandler = (_: ChangeEvent<unknown>, value: number) => {
+    productSearch.page = value;
+    setProductSearch({ ...productSearch });
+  };
+
+  const chooseProductHandler = (id: string) => {
+    navigate(`/products/${id}`);
+  };
+
+  const handleAddToCart = (id: string) => {
     setAddedToCart(id);
     setTimeout(() => setAddedToCart(null), 1200);
   };
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = (id: string) => {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
     );
   };
 
-  const handleSortToggle = (key: string) => {
-    setActiveSort((prev) => (prev === key ? null : key));
-    setPage(1);
-  };
-
-  const handleCategoryChange = (_: React.SyntheticEvent, v: number) => {
-    setActiveCategory(v);
-    setPage(1);
-    setSearchQuery("");
-    setActiveSort(null);
-  };
-
-  const handlePageChange = (_: React.ChangeEvent<unknown>, v: number) => {
-    setPage(v);
-  };
-
   const formatPrice = (price: number) => price.toLocaleString("uz-UZ") + " $";
+
+  // Derive active tab index from productSearch — always in sync, no separate state needed
+  const activeCategory = CATEGORIES.findIndex(
+    (c) => c.value === (productSearch.productCollection ?? null),
+  );
 
   return (
     <Box className="product-page">
@@ -266,7 +195,7 @@ const Product: React.FC = () => {
         <Box className="tabs-wrapper">
           <Tabs
             value={activeCategory}
-            onChange={handleCategoryChange}
+            onChange={(_, v) => searchCollectionHandler(CATEGORIES[v].value)}
             variant="scrollable"
             scrollButtons="auto"
             className="category-tabs"
@@ -274,8 +203,8 @@ const Product: React.FC = () => {
           >
             {CATEGORIES.map((cat, i) => (
               <Tab
-                key={cat}
-                label={cat}
+                key={cat.label}
+                label={cat.label}
                 className={`category-tab ${activeCategory === i ? "active-tab" : ""}`}
               />
             ))}
@@ -286,15 +215,17 @@ const Product: React.FC = () => {
           <InputBase
             className="search-input"
             placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setPage(1);
-            }}
-            onKeyDown={(e) => e.key === "Enter" && setPage(1)}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && searchProductHandler()}
             fullWidth
           />
-          <Box className="search-btn" role="button" tabIndex={0}>
+          <Box
+            className="search-btn"
+            role="button"
+            tabIndex={0}
+            onClick={searchProductHandler}
+          >
             <SearchIcon sx={{ fontSize: 16 }} />
             <span>SEARCH</span>
           </Box>
@@ -306,8 +237,8 @@ const Product: React.FC = () => {
           {SORT_OPTIONS.map((opt) => (
             <Button
               key={opt.key}
-              className={`sort-btn ${activeSort === opt.key ? "sort-active" : ""}`}
-              onClick={() => handleSortToggle(opt.key)}
+              className={`sort-btn ${productSearch.order === opt.key ? "sort-active" : ""}`}
+              onClick={() => searchOrderHandler(opt.key)}
               startIcon={opt.icon}
               disableElevation
             >
@@ -319,16 +250,8 @@ const Product: React.FC = () => {
 
       <Box className="results-info">
         <Typography className="results-count">
-          {processedProducts.length} products found
+          {Math.min(products.length, PAGE_LENGTHS)} products found
         </Typography>
-        {activeSort && (
-          <Chip
-            label={`Sorted: ${activeSort.toUpperCase()}`}
-            size="small"
-            className="sort-chip"
-            onDelete={() => setActiveSort(null)}
-          />
-        )}
       </Box>
 
       <Box className="product-grid-wrapper">
@@ -344,96 +267,95 @@ const Product: React.FC = () => {
             },
           }}
         >
-          {paginatedProducts.map((product) => (
-            <Box key={product.id}>
-              <Card
-                className={`product-card ${addedToCart === product.id ? "bounce" : ""}`}
-                elevation={0}
-              >
-                {product.tag && (
-                  <Chip
-                    label={product.tag}
-                    size="small"
-                    className="product-tag"
-                    style={{ background: TAG_COLORS[product.tag] }}
-                  />
-                )}
-
-                <Tooltip title="Add to favorites" placement="top">
-                  <IconButton
-                    className="fav-btn"
-                    size="small"
-                    onClick={() => toggleFavorite(product.id)}
+          {products.length !== 0 ? (
+            products.slice(0, PAGE_LENGTHS).map((product) => {
+              const imagePath = `${serverApi}/${product.productImages[0]}`;
+              const volumeLabel =
+                product.productCollection === ProductCollection.GADGETS
+                  ? product.productSize
+                  : product.productWeight >= 1000
+                    ? `${product.productWeight / 1000} KG`
+                    : `${product.productWeight} GR`;
+              return (
+                <Box key={product._id}>
+                  <Card
+                    className={`product-card ${addedToCart === product._id ? "bounce" : ""}`}
+                    elevation={0}
+                    onClick={() => chooseProductHandler(product._id)}
+                    sx={{ cursor: "pointer" }}
                   >
-                    {favorites.includes(product.id) ? (
-                      <FavoriteIcon fontSize="small" className="fav-active" />
-                    ) : (
-                      <FavoriteBorderIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                </Tooltip>
-
-                <Box className="product-image-wrapper">
-                  <CardMedia
-                    component="img"
-                    image={product.image}
-                    alt={product.name}
-                    className="product-image"
-                  />
-                </Box>
-
-                <CardContent className="product-content">
-                  <Typography className="product-name" variant="h6">
-                    {product.name}
-                  </Typography>
-
-                  <Box className="product-meta">
-                    <Typography className="product-weight">
-                      ⚖️ {product.weight}
-                    </Typography>
-                    <Box className="rating-row">
-                      <Rating
-                        value={product.rating}
-                        precision={0.5}
-                        readOnly
+                    <Tooltip title="Add to favorites" placement="top">
+                      <IconButton
+                        className="fav-btn"
                         size="small"
-                        className="product-rating"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(product._id);
+                        }}
+                      >
+                        {favorites.includes(product._id) ? (
+                          <FavoriteIcon
+                            fontSize="small"
+                            className="fav-active"
+                          />
+                        ) : (
+                          <FavoriteBorderIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                    </Tooltip>
+
+                    <Box className="product-image-wrapper">
+                      <CardMedia
+                        component="img"
+                        image={imagePath}
+                        alt={product.productName}
+                        className="product-image"
                       />
-                      <Typography className="review-count">
-                        ({product.reviews})
-                      </Typography>
                     </Box>
-                  </Box>
 
-                  <Typography className="product-price">
-                    {formatPrice(product.price)}
-                  </Typography>
-                </CardContent>
+                    <CardContent className="product-content">
+                      <Typography className="product-name" variant="h6">
+                        {product.productName}
+                      </Typography>
 
-                <CardActions className="product-actions">
-                  <Button
-                    variant="contained"
-                    className={`order-btn ${addedToCart === product.id ? "added" : ""}`}
-                    fullWidth
-                    onClick={() => handleAddToCart(product.id)}
-                    disableElevation
-                  >
-                    {addedToCart === product.id ? "✓ Added!" : "Order Now"}
-                  </Button>
-                  <Tooltip title="View product" placement="top">
-                    <IconButton className="view-btn" size="small">
-                      <RemoveRedEyeIcon
-                        fontSize="small"
-                        sx={{ color: "#FF4033" }}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </CardActions>
-              </Card>
-            </Box>
-          ))}
+                      <Box className="product-meta">
+                        <Typography className="product-weight">
+                          ⚖️ {volumeLabel}
+                        </Typography>
+                        <Box className="rating-row">
+                          <RemoveRedEyeIcon
+                            sx={{ fontSize: 14, color: "#e67e22" }}
+                          />
+                          <Typography className="review-count">
+                            {product.productViews}
+                          </Typography>
+                        </Box>
+                      </Box>
 
-          {processedProducts.length === 0 && (
+                      <Typography className="product-price">
+                        {formatPrice(product.productPrice)}
+                      </Typography>
+                    </CardContent>
+
+                    <CardActions className="product-actions">
+                      <Button
+                        variant="contained"
+                        className={`order-btn ${addedToCart === product._id ? "added" : ""}`}
+                        fullWidth
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddToCart(product._id);
+                        }}
+                        disableElevation
+                      >
+                        {addedToCart === product._id ? "✓ Added!" : "Order Now"}
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Box>
+              );
+            })
+          ) : (
             <Box className="no-data-box__text">
               <Typography>Products are not available!!!</Typography>
             </Box>
@@ -441,25 +363,21 @@ const Product: React.FC = () => {
         </Box>
       </Box>
 
-      {processedProducts.length > 0 && (
-        <Box className="pagination-wrapper">
-          <Typography className="pagination-info">
-            {(page - 1) * ITEMS_PER_PAGE + 1}–
-            {Math.min(page * ITEMS_PER_PAGE, processedProducts.length)} of{" "}
-            {processedProducts.length}
-          </Typography>
-
-          <Pagination
-            count={Math.max(totalPages, 1)}
-            page={Math.min(page, Math.max(totalPages, 1))}
-            onChange={handlePageChange}
-            className="pagination"
-            shape="rounded"
-            siblingCount={1}
-            boundaryCount={1}
-          />
-        </Box>
-      )}
+      <Box className="pagination-wrapper">
+        <Pagination
+          count={
+            products.length > PAGE_LENGTHS
+              ? productSearch.page + 1
+              : productSearch.page
+          }
+          page={productSearch.page}
+          onChange={paginationHandler}
+          className="pagination"
+          shape="rounded"
+          siblingCount={1}
+          boundaryCount={1}
+        />
+      </Box>
 
       <div className={"nearest-place"}>
         <Container>
@@ -516,4 +434,4 @@ const Product: React.FC = () => {
   );
 };
 
-export default Product;
+export default ProductsPage;

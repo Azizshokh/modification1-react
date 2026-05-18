@@ -25,13 +25,12 @@ function NewProductCard({ product }: { product: Product }) {
   const [liked, setLiked] = useState<boolean>(false);
 
   const imagePath = `${serverApi}/${product.productImages[0]}`;
-  const sizeVolume =
-    product.productCollection === ProductCollection.CAT ||
-    product.productCollection === ProductCollection.BIRD ||
-    product.productCollection === ProductCollection.FISH ||
-    product.productCollection === ProductCollection.DOG
-      ? product.productVolume + " GR"
-      : product.productSize + " SIZE";
+  const volumeLabel =
+    product.productCollection === ProductCollection.GADGETS
+      ? product.productSize
+      : product.productWeight >= 1000
+        ? `${product.productWeight / 1000} KG`
+        : `${product.productWeight} GR`;
 
   return (
     <Box className="new-card">
@@ -56,7 +55,7 @@ function NewProductCard({ product }: { product: Product }) {
         </Box>
 
         {/* Size badge over image */}
-        <Box className="new-card__size-badge">{sizeVolume}</Box>
+        <Box className="new-card__size-badge">{volumeLabel}</Box>
       </Box>
 
       {/* Card body */}

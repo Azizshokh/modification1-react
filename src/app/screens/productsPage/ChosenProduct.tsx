@@ -1,12 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Typography,
   Button,
   IconButton,
   Rating,
-  Chip,
   Divider,
   Tooltip,
 } from "@mui/material";
@@ -19,66 +18,52 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch } from "@reduxjs/toolkit";
+import { createSelector } from "reselect";
+import { setChosenProduct } from "./slice";
+import { retrieveChosenProduct } from "./selector";
+import type { Product } from "../../../lib/types/product";
+import ProductService from "../../services/ProductService";
+import { ProductCollection } from "../../../lib/enums/product.enum";
+import { serverApi } from "../../../lib/config";
+
 import "./../../../css/product/chosenProduct.css";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+/** Redux **/
+const actionDispatch = (dispatch: Dispatch) => ({
+  setChosenProduct: (data: Product) => dispatch(setChosenProduct(data)),
+});
 
-interface ProductDetail {
-  id: number;
-  name: string;
-  description: string;
-  descriptionExtra: string;
-  price: number;
-  oldPrice: number;
-  rating: number;
-  reviews: number;
-  tag?: "New" | "Sale" | "Popular";
-  weight: string;
-  category: string;
-  images: string[];
-}
-
-// ─── Hardcoded Product ────────────────────────────────────────────────────────
-
-const PRODUCT: ProductDetail = {
-  id: 1,
-  name: "Chicken Caesar Salad",
-  description:
-    "Chicken Caesar Salad is a popular and well-balanced dish that combines fresh and flavourful ingredients to create a satisfying meal. It typically features grilled or roasted chicken breast, served over a bed of crisp romaine lettuce, topped with shaved parmesan cheese, golden garlic croutons, and classic Caesar dressing made from olive oil, egg yolk, lemon juice, anchovies, garlic, and mustard.",
-  descriptionExtra:
-    "This salad is known for its rich, creamy, and tangy flavour profile with a perfect balance of textures – the juiciness of the chicken, the crunch of fresh lettuce and croutons, and the smoothness of the dressing. Some versions may include extras like boiled eggs, bacon bits, or avocado for added taste and nutrition.",
-  price: 75,
-  oldPrice: 96,
-  rating: 4.5,
-  reviews: 218,
-  tag: "Popular",
-  weight: "400 g",
-  category: "Cats",
-  images: [
-    "/img/products/Cat_LP_DryFood_8.jpg",
-    "/img/products/Cat_LP_DryFood_8.jpg",
-    "/img/products/Cat_LP_DryFood_8.jpg",
-    "/img/products/Cat_LP_DryFood_8.jpg",
-  ],
-};
-
-const TAG_COLORS: Record<string, string> = {
-  New: "#4ade80",
-  Sale: "#f87171",
-  Popular: "#fb923c",
-};
+const chosenProductRetriever = createSelector(
+  retrieveChosenProduct,
+  (chosenProduct) => ({ chosenProduct }),
+);
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const ChosenProduct: React.FC = () => {
   const navigate = useNavigate();
+  const { productId } = useParams<{ productId: string }>();
+  const { setChosenProduct } = actionDispatch(useDispatch());
+  const { chosenProduct } = useSelector(chosenProductRetriever);
+
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [isFav, setIsFav] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [orderedNow, setOrderedNow] = useState(false);
 
-  const product = PRODUCT;
+  useEffect(() => {
+    if (!productId) return;
+    const product = new ProductService();
+    product
+      .getProduct(productId)
+      .then((data) => setChosenProduct(data))
+      .catch((err) => console.log(err));
+  }, [productId]);
 
   const handleOrder = () => {
     setOrderedNow(true);
@@ -96,9 +81,14 @@ const ChosenProduct: React.FC = () => {
 
   const formatPrice = (p: number) => `$${p}`;
 
-  const discount = Math.round(
-    ((product.oldPrice - product.price) / product.oldPrice) * 100,
-  );
+  if (!chosenProduct) return null;
+
+  const weightLabel =
+    chosenProduct.productCollection === ProductCollection.GADGETS
+      ? chosenProduct.productSize
+      : chosenProduct.productWeight >= 1000
+        ? `${chosenProduct.productWeight / 1000} KG`
+        : `${chosenProduct.productWeight} GR`;
 
   return (
     <Box className="chosen-page">
@@ -123,21 +113,25 @@ const ChosenProduct: React.FC = () => {
           {/* Main image */}
           <Box className="main-image-wrapper">
             <img
-              src={product.images[activeImage]}
-              alt={product.name}
+              src={`${serverApi}/${chosenProduct.productImages[activeImage]}`}
+              alt={chosenProduct.productName}
               className="main-image"
             />
           </Box>
 
           {/* Thumbnails */}
           <Box className="thumbnails">
-            {product.images.map((img, i) => (
+            {chosenProduct.productImages.map((img, i) => (
               <Box
                 key={i}
                 className={`thumb-wrapper ${activeImage === i ? "thumb-active" : ""}`}
                 onClick={() => setActiveImage(i)}
               >
-                <img src={img} alt={`thumb-${i}`} className="thumb-img" />
+                <img
+                  src={`${serverApi}/${img}`}
+                  alt={`thumb-${i}`}
+                  className="thumb-img"
+                />
               </Box>
             ))}
           </Box>
@@ -171,18 +165,19 @@ const ChosenProduct: React.FC = () => {
 
           {/* Category breadcrumb */}
           <Typography className="chosen-category">
-            {product.category} / Food
+            {chosenProduct.productCollection} / Food
           </Typography>
 
           {/* Name */}
           <Typography className="chosen-name" variant="h4">
-            {product.name}
+            {chosenProduct.productName}
           </Typography>
 
           {/* Description */}
-          <Typography className="chosen-desc">{product.description}</Typography>
-          <Typography className="chosen-desc chosen-desc-extra">
-            {product.descriptionExtra}
+          <Typography className="chosen-desc">
+            {chosenProduct.productDesc
+              ? chosenProduct.productDesc
+              : "No Description"}
           </Typography>
 
           <Divider className="chosen-divider" />
@@ -210,20 +205,23 @@ const ChosenProduct: React.FC = () => {
 
             {/* Price */}
             <Box className="price-block">
-              <Typography className="old-price">
-                {formatPrice(product.oldPrice * quantity)}
-              </Typography>
               <Typography className="current-price">
-                {formatPrice(product.price * quantity)}
+                {formatPrice(chosenProduct.productPrice * quantity)}
               </Typography>
               <Box className="price-rating">
                 <Rating
-                  value={product.rating}
+                  value={4.5}
                   precision={0.5}
                   readOnly
                   size="small"
                   className="chosen-rating"
                 />
+                <Box className="product-view">
+                  <RemoveRedEyeIcon sx={{ fontSize: 14, mr: "4px" }} />
+                  <Typography variant="caption">
+                    {chosenProduct.productViews}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -264,9 +262,7 @@ const ChosenProduct: React.FC = () => {
               <Typography className="badge-text">Quality guaranteed</Typography>
             </Box>
             <Box className="badge-item">
-              <Typography className="badge-weight">
-                ⚖️ {product.weight}
-              </Typography>
+              <Typography className="badge-weight">⚖️ {weightLabel}</Typography>
             </Box>
           </Box>
         </Box>

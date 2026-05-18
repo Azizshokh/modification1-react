@@ -4,6 +4,7 @@ import { Product } from "./product";
 /*** React App State ***/
 export interface AppRootState {
     homePage: HomePageState;
+    productsPage: ProductsPageState;
 }
 
 /*** HomePage ***/
@@ -14,5 +15,10 @@ export interface HomePageState {
 }
 
 /*** ProductsPage ***/
+export interface ProductsPageState {
+    market: Member | null;
+    chosenProduct: Product | null;
+    products: Product[];
+}
 
 /*** OrdersPage ***/
