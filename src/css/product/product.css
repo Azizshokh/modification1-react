@@ -240,16 +240,6 @@
   color: var(--text-light) !important;
   font-weight: 600 !important;
 }
-.sort-chip {
-  font-family: 'Nunito', sans-serif !important;
-  font-size: 0.72rem !important;
-  font-weight: 700 !important;
-  background: rgba(230, 126, 34, 0.12) !important;
-  color: var(--primary) !important;
-  border: 1px solid rgba(230, 126, 34, 0.25) !important;
-}
-.sort-chip .MuiChip-deleteIcon { color: var(--primary) !important; font-size: 14px !important; }
-
 @media (max-width: 900px) {
   .category-search-row {
     flex-direction: column;
@@ -295,20 +285,6 @@
   40%  { transform: scale(1.06) translateY(-5px); }
   70%  { transform: scale(0.97); }
   100% { transform: scale(1); }
-}
-
-/* Tag */
-.product-tag {
-  position: absolute !important;
-  top: 12px; left: 12px;
-  z-index: 2;
-  font-family: 'Nunito', sans-serif !important;
-  font-weight: 800 !important;
-  font-size: 0.68rem !important;
-  height: 22px !important;
-  color: #fff !important;
-  border-radius: 6px !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.14);
 }
 
 /* Favorite */
@@ -376,9 +352,6 @@
   border-radius: 20px;
 }
 
-.rating-row { display: flex; align-items: center; gap: 4px; }
-.product-rating .MuiRating-iconFilled { color: var(--primary-light) !important; }
-.product-rating .MuiRating-iconEmpty  { color: #e8d5c0 !important; }
 .review-count {
   font-size: 0.72rem !important;
   color: var(--text-light) !important;
@@ -421,20 +394,6 @@
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
 }
 
-.view-btn {
-  width: 38px !important;
-  height: 38px !important;
-  flex-shrink: 0;
-  background: var(--bg) !important;
-  border: 2px solid rgba(255, 64, 51, 0.18) !important;
-  border-radius: 12px !important;
-  transition: all 0.2s ease !important;
-}
-.view-btn:hover {
-  background: rgba(255, 64, 51, 0.08) !important;
-  border-color: #FF4033 !important;
-  transform: scale(1.1);
-}
 
 /* ─── No data ───────────────────────────────────────────────────────────────── */
 .no-data-box__text {
@@ -459,14 +418,6 @@
   gap: 12px;
   border-top: 2px dashed var(--border-light);
   padding-top: 28px;
-}
-
-.pagination-info {
-  font-family: 'Nunito', sans-serif !important;
-  font-size: 0.84rem !important;
-  font-weight: 700 !important;
-  color: var(--text-light) !important;
-  white-space: nowrap;
 }
 
 /* MUI Pagination overrides */

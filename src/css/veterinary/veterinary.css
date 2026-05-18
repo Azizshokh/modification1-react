@@ -572,11 +572,6 @@
   font-size: 12px;
 }
 
-.vet-hours-closed {
-  color: var(--vet-text-light);
-  font-size: 12px;
-}
-
 /* ── Contact Strip ── */
 .vet-contact-strip {
   background: linear-gradient(135deg, var(--vet-green) 0%, var(--vet-green-dark) 100%);

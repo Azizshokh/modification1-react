@@ -390,15 +390,6 @@
   box-shadow: 0 4px 16px rgba(74,124,89,0.35);
 }
 
-.order-user-avatar {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid white;
-  display: block;
-}
-
 .order-user-icon-box {
   position: absolute;
   bottom: -4px;
@@ -519,12 +510,6 @@
   letter-spacing: 0.06em;
 }
 
-.stat-divider {
-  width: 1px;
-  height: 32px;
-  background: var(--pf-border);
-}
-
 /* Social Media */
 .user-media-box {
   display: flex;
@@ -560,6 +545,5 @@
 
 .social-link.facebook:hover { background: #EBF0FA; border-color: #1877F2; }
 .social-link.instagram:hover { background: #FDF0F8; border-color: #E1306C; }
-.social-link.telegram:hover  { background: #E8F4FD; border-color: #2AABEE; }
 .social-link.youtube:hover   { background: #FDECEA; border-color: #FF0000; }
 

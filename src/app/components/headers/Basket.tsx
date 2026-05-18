@@ -51,14 +51,14 @@ function QtyControl({
 
 function BasketItem({
   item,
+  onAdd,
   onRemove,
-  onIncrease,
-  onDecrease,
+  onDelete,
 }: {
   item: CartItem;
-  onRemove: (_id: string) => void;
-  onIncrease: (_id: string) => void;
-  onDecrease: (_id: string) => void;
+  onAdd: (item: CartItem) => void;
+  onRemove: (item: CartItem) => void;
+  onDelete: (item: CartItem) => void;
 }) {
   return (
     <div className="basket-item">
@@ -84,14 +84,14 @@ function BasketItem({
 
       <QtyControl
         qty={item.quantity}
-        onIncrease={() => onIncrease(item._id)}
-        onDecrease={() => onDecrease(item._id)}
+        onIncrease={() => onAdd(item)}
+        onDecrease={() => onRemove(item)}
       />
 
       <IconButton
         size="small"
         className="basket-item-remove"
-        onClick={() => onRemove(item._id)}
+        onClick={() => onDelete(item)}
         aria-label={`Remove ${item.name}`}
       >
         <CancelIcon fontSize="small" />
@@ -118,19 +118,19 @@ function EmptyState() {
 
 interface BasketProps {
   cartItems: CartItem[];
-  onRemove: (_id: string) => void;
-  onIncrease: (_id: string) => void;
-  onDecrease: (_id: string) => void;
-  onClearAll: () => void;
+  onAdd: (item: CartItem) => void;
+  onRemove: (item: CartItem) => void;
+  onDelete: (item: CartItem) => void;
+  onDeleteAll: () => void;
 }
 
 // ─── Main Basket component ───────────────────────────────────────
 export default function Basket({
   cartItems,
+  onAdd,
   onRemove,
-  onIncrease,
-  onDecrease,
-  onClearAll,
+  onDelete,
+  onDeleteAll,
 }: BasketProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -145,6 +145,11 @@ export default function Basket({
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+  const FREE_DELIVERY = 100;
+  const DELIVERY_FEE = 5;
+  const isFreeDelivery = subtotal >= FREE_DELIVERY;
+  const deliveryCost = isFreeDelivery ? 0 : DELIVERY_FEE;
+  const total = subtotal + deliveryCost;
 
   return (
     <div>
@@ -191,7 +196,7 @@ export default function Basket({
               {cartItems.length > 0 && (
                 <button
                   className="basket-clear-btn"
-                  onClick={onClearAll}
+                  onClick={onDeleteAll}
                   aria-label="Clear all items"
                 >
                   <DeleteOutlineIcon />
@@ -209,9 +214,9 @@ export default function Basket({
                 <BasketItem
                   key={item._id}
                   item={item}
+                  onAdd={onAdd}
                   onRemove={onRemove}
-                  onIncrease={onIncrease}
-                  onDecrease={onDecrease}
+                  onDelete={onDelete}
                 />
               ))
             )}
@@ -231,12 +236,36 @@ export default function Basket({
                 <Typography className="basket-summary-label">
                   Delivery
                 </Typography>
-                <Typography className="basket-summary-free">Free</Typography>
+                {isFreeDelivery ? (
+                  <Typography className="basket-summary-free">Free</Typography>
+                ) : (
+                  <Typography className="basket-summary-delivery-cost">
+                    +${DELIVERY_FEE.toFixed(2)}
+                  </Typography>
+                )}
               </div>
+              {!isFreeDelivery && (
+                <div className="basket-delivery-hint">
+                  <span className="basket-delivery-hint-icon"></span>
+                  <span>
+                    Add{" "}
+                    <strong>${(FREE_DELIVERY - subtotal).toFixed(2)}</strong>{" "}
+                    more for free delivery
+                  </span>
+                </div>
+              )}
+              {isFreeDelivery && (
+                <div className="basket-delivery-hint basket-delivery-hint--free">
+                  <span className="basket-delivery-hint-icon"></span>
+                  <span>
+                    You've unlocked <strong>free delivery!</strong>
+                  </span>
+                </div>
+              )}
               <div className="basket-total-row">
                 <Typography className="basket-total-label">Total</Typography>
                 <Typography className="basket-total-value">
-                  ${subtotal.toFixed(2)}
+                  ${total.toFixed(2)}
                 </Typography>
               </div>
               <Button

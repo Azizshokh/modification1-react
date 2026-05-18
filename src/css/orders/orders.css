@@ -379,14 +379,6 @@
   margin: 0;
 }
 
-.op-order-id {
-  font-size: 11px;
-  color: var(--op-text-light);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin: 0;
-}
-
 .op-order-actions {
   display: flex;
   gap: 8px;
@@ -513,29 +505,6 @@
   border-color: var(--op-green);
 }
 
-.op-action-btn.review {
-  background: #fffbeb;
-  color: #856404;
-  border-color: #ffc107;
-}
-
-.op-action-btn.review:hover {
-  background: #ffc107;
-  color: #fff;
-  border-color: #ffc107;
-}
-
-.op-action-btn.review.green {
-  background: var(--op-green-ultra);
-  color: var(--op-green-dark);
-  border-color: var(--op-green-light);
-}
-
-.op-action-btn.review.green:hover {
-  background: var(--op-green);
-  color: #fff;
-  border-color: var(--op-green);
-}
 
 /* ═══════════════════════════════════════════
    SERVICE BOOKING CARD (green theme)
@@ -616,26 +585,6 @@
   margin-bottom: 8px;
 }
 
-.op-svc-provider {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--op-green-dark);
-  margin: 0 0 5px;
-  padding-left: 10px;
-  border-left: 3px solid var(--op-green-light);
-}
-
-.op-svc-note {
-  font-size: 12px;
-  color: var(--op-text-mid);
-  font-style: italic;
-  background: rgba(255,255,255,0.75);
-  border-left: 3px solid var(--op-green-light);
-  padding: 5px 10px;
-  border-radius: 0 6px 6px 0;
-  margin: 0;
-}
-
 /* ── Service actions ── */
 .op-svc-actions {
   display: flex;
@@ -646,13 +595,6 @@
   min-width: 108px;
 }
 
-.op-svc-id {
-  font-size: 11px;
-  color: var(--op-text-light);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin: 0;
-}
 
 /* ═══════════════════════════════════════════
    EMPTY STATE

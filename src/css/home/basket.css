@@ -290,6 +290,47 @@
     font-weight: 600 !important;
 }
 
+.basket-summary-delivery-cost {
+    font-size: 12px !important;
+    color: #CC7A08 !important;
+    font-weight: 700 !important;
+}
+
+/* ─── Delivery hint banner ────────────────────────────────────── */
+.basket-delivery-hint {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: #fff8ec;
+    border: 1px solid #f5d78e;
+    border-radius: 8px;
+    padding: 7px 10px;
+    margin: 6px 0 10px;
+    font-size: 12px;
+    color: #7c5200;
+    line-height: 1.4;
+}
+
+.basket-delivery-hint strong {
+    font-weight: 700;
+    color: #CC7A08;
+}
+
+.basket-delivery-hint--free {
+    background: #edfaf3;
+    border-color: #a3d9b8;
+    color: #1B6B4A;
+}
+
+.basket-delivery-hint--free strong {
+    color: #1B6B4A;
+}
+
+.basket-delivery-hint-icon {
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
 .basket-total-row {
     display: flex;
     justify-content: space-between;

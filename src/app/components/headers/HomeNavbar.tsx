@@ -10,13 +10,19 @@ import "../../../css/homeNavbar.css";
 
 interface HomeNavbarProps {
   cartItems: CartItem[];
-  onRemove: (_id: string) => void;
-  onIncrease: (_id: string) => void;
-  onDecrease: (_id: string) => void;
-  onClearAll: () => void;
+  onAdd: (item: CartItem) => void;
+  onRemove: (item: CartItem) => void;
+  onDelete: (item: CartItem) => void;
+  onDeleteAll: () => void;
 }
 
-export function HomeNavbar({ cartItems, onRemove, onIncrease, onDecrease, onClearAll }: HomeNavbarProps): React.JSX.Element {
+export function HomeNavbar({
+  cartItems,
+  onAdd,
+  onRemove,
+  onDelete,
+  onDeleteAll,
+}: HomeNavbarProps): React.JSX.Element {
   // Test uchun: true qilsangiz user icon + Orders/MyPage chiqadi, null holatda Login + SignUp chiqadi.
   const authMember: boolean | null = null;
 
@@ -84,7 +90,13 @@ export function HomeNavbar({ cartItems, onRemove, onIncrease, onDecrease, onClea
 
         {/* ACTIONS */}
         <Stack className="navbar-actions" direction="row">
-          <Basket cartItems={cartItems} onRemove={onRemove} onIncrease={onIncrease} onDecrease={onDecrease} onClearAll={onClearAll} />
+          <Basket
+            cartItems={cartItems}
+            onAdd={onAdd}
+            onRemove={onRemove}
+            onDelete={onDelete}
+            onDeleteAll={onDeleteAll}
+          />
 
           {!authMember ? (
             <>

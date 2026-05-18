@@ -10,18 +10,18 @@ import "../../../css/otherNavbar.css";
 
 interface OtherNavbarProps {
   cartItems: CartItem[];
-  onRemove: (_id: string) => void;
-  onIncrease: (_id: string) => void;
-  onDecrease: (_id: string) => void;
-  onClearAll: () => void;
+  onAdd: (item: CartItem) => void;
+  onRemove: (item: CartItem) => void;
+  onDelete: (item: CartItem) => void;
+  onDeleteAll: () => void;
 }
 
 export function OtherNavbar({
   cartItems,
+  onAdd,
   onRemove,
-  onIncrease,
-  onDecrease,
-  onClearAll,
+  onDelete,
+  onDeleteAll,
 }: OtherNavbarProps): React.JSX.Element {
   // Test uchun: true qilsangiz Login o'rniga user icon chiqadi.
   const authMember: boolean | null = true;
@@ -88,10 +88,10 @@ export function OtherNavbar({
           <Stack className="navbar-actions" direction="row">
             <Basket
               cartItems={cartItems}
+              onAdd={onAdd}
               onRemove={onRemove}
-              onIncrease={onIncrease}
-              onDecrease={onDecrease}
-              onClearAll={onClearAll}
+              onDelete={onDelete}
+              onDeleteAll={onDeleteAll}
             />
 
             {!authMember ? (

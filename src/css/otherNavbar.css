@@ -103,23 +103,6 @@
 	gap: 12px;
 }
 
-.other-navbar .navbar-content .navbar-actions .cart-btn {
-	width: 44px;
-	height: 44px;
-	border: none;
-	border-radius: 50%;
-	background: #0f766e;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: background 0.2s;
-}
-
-.other-navbar .navbar-content .navbar-actions .cart-btn:hover {
-	background: #0b5d57;
-}
-
 .other-navbar .navbar-content .navbar-actions .login-btn {
 	min-width: 110px;
 	padding: 10px 20px;
