@@ -1,15 +1,35 @@
-﻿import React from "react";
+﻿import React, { useState } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import EcoIcon from "@mui/icons-material/Grass";
 import SecurityIcon from "@mui/icons-material/Security";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CircleIcon from "@mui/icons-material/Circle";
+import PetsIcon from "@mui/icons-material/Pets";
 
+import AuthenticationModal from "../../components/auth";
+import { useGlobals } from "../../hooks/useGlobals";
 import "../../../css/home/homePage.css";
 
 export function HomePage(): React.JSX.Element {
-  // Test uchun: true qilsangiz Sign Up button yo'qoladi, null holatda ko'rinadi.
-  const authMember: boolean | null = null;
+  const navigate = useNavigate();
+  const { authMember } = useGlobals();
+  const [signupOpen, setSignupOpen] = useState<boolean>(false);
+  const [loginOpen, setLoginOpen] = useState<boolean>(false);
+
+  const handleSignupOpen = () => setSignupOpen(true);
+  const handleSignupClose = () => setSignupOpen(false);
+  const handleLoginClose = () => setLoginOpen(false);
+  const handleSwitchToLogin = () => {
+    setSignupOpen(false);
+    setLoginOpen(true);
+  };
+  const handleSwitchToSignup = () => {
+    setLoginOpen(false);
+    setSignupOpen(true);
+  };
+  const handleOrderNow = () => navigate("/products");
+
   return (
     <Box className="homepage">
       {/* HERO */}
@@ -34,6 +54,7 @@ export function HomePage(): React.JSX.Element {
             <Button
               className="btn-order"
               sx={{ background: "#1b6b4a", color: "#fff" }}
+              onClick={handleOrderNow}
             >
               Order Now
             </Button>
@@ -41,7 +62,8 @@ export function HomePage(): React.JSX.Element {
             {!authMember ? (
               <Button
                 className="btn-signup-outline"
-                sx={{ border: "2px solid #ccc" }}
+                startIcon={<PetsIcon sx={{ fontSize: 18 }} />}
+                onClick={handleSignupOpen}
               >
                 Sign Up
               </Button>
@@ -133,6 +155,15 @@ export function HomePage(): React.JSX.Element {
           </Box>
         </Box>
       </Box>
+
+      <AuthenticationModal
+        signupOpen={signupOpen}
+        loginOpen={loginOpen}
+        handleSignupClose={handleSignupClose}
+        handleLoginClose={handleLoginClose}
+        onSwitchToLogin={handleSwitchToLogin}
+        onSwitchToSignup={handleSwitchToSignup}
+      />
     </Box>
   );
 }

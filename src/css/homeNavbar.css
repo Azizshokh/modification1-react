@@ -109,6 +109,27 @@
     color: #0b5d57;
 }
 
+.home-navbar .navbar-content .navbar-actions .signup-btn {
+    min-width: 110px;
+    padding: 10px 20px;
+    border: 1.5px solid #e05c2a;
+    border-radius: 30px;
+    background: #e05c2a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.home-navbar .navbar-content .navbar-actions .signup-btn:hover {
+    background: #c94e21;
+    border-color: #c94e21;
+}
+
 .home-navbar .navbar-content .navbar-actions .user-btn {
     width: 44px;
     height: 44px;
@@ -126,3 +147,23 @@
     background: #0b5d57;
 }
 
+.user-menu-paper {
+    margin-top: 8px;
+    min-width: 160px;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 32px rgba(15, 118, 110, 0.18) !important;
+    border: 1px solid rgba(15, 118, 110, 0.12);
+    overflow: hidden;
+}
+
+.user-menu-paper .user-menu-logout {
+    font-family: "Nunito", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #e05c2a;
+    padding: 10px 16px;
+}
+
+.user-menu-paper .user-menu-logout:hover {
+    background: rgba(224, 92, 42, 0.08);
+}

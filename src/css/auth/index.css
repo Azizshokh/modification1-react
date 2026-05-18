@@ -1,0 +1,381 @@
+/* ===================================================
+   PetFood — Auth Modal Styles
+   Theme: Warm cream, orange, and green brand accents
+=================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&display=swap');
+
+/* ── AUTH ROOT ── */
+.auth-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.auth-panel {
+  position: relative;
+  width: min(960px, 100%);
+  min-height: 560px;
+  background: #fffdf9;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(45, 32, 22, 0.22);
+  outline: none;
+}
+
+.auth-panel--login {
+  min-height: 520px;
+}
+
+/* ── CLOSE BUTTON ── */
+.auth-close-btn {
+  position: absolute !important;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.86) !important;
+  color: #2d2016 !important;
+  box-shadow: 0 4px 12px rgba(45, 32, 22, 0.18) !important;
+}
+
+.auth-close-btn:hover {
+  background: #fff !important;
+  color: #d4641a !important;
+}
+
+/* ── VISUAL SIDE ── */
+.auth-visual {
+  position: relative;
+  flex: 1.05;
+  min-height: 280px;
+  background: linear-gradient(160deg, #1b6b4a 0%, #5aa06f 52%, #f2b24d 100%);
+}
+
+.auth-visual--login {
+  background: linear-gradient(160deg, #d4641a 0%, #f07a2a 52%, #f5c354 100%);
+}
+
+.auth-visual-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.22;
+}
+
+.auth-visual-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 34px 30px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(27, 24, 20, 0.66) 100%);
+}
+
+.auth-visual-badge {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.auth-visual-badge-icon {
+  font-size: 14px !important;
+}
+
+.auth-visual-badge--login {
+  background: rgba(45, 32, 22, 0.22);
+}
+
+.auth-visual-title {
+  font-family: 'Baloo 2', cursive !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  color: #fff !important;
+  max-width: 320px;
+}
+
+.auth-visual-text {
+  max-width: 360px;
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  line-height: 1.65 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* ── PERKS LIST ── */
+.auth-perks {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.auth-perk {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.auth-perk-icon {
+  font-size: 18px !important;
+  padding: 5px;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-sizing: border-box;
+}
+
+/* ── FORM SIDE ── */
+.auth-form-side {
+  flex: 0.95;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 36px;
+  background:
+    radial-gradient(circle at top right, rgba(240, 122, 42, 0.08) 0%, transparent 34%),
+    linear-gradient(180deg, #fffdf9 0%, #fff7ee 100%);
+}
+
+.auth-form-side--login {
+  background:
+    radial-gradient(circle at top right, rgba(27, 107, 74, 0.08) 0%, transparent 34%),
+    linear-gradient(180deg, #fffdf9 0%, #fff8f2 100%);
+}
+
+.auth-chip-row {
+  display: flex;
+}
+
+.auth-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.auth-chip .MuiSvgIcon-root {
+  font-size: 16px;
+}
+
+.auth-chip--signup {
+  background: #fff0e4;
+  color: #d4641a;
+  border: 1px solid #f3c8a8;
+}
+
+.auth-chip--login {
+  background: #eaf5ec;
+  color: #1b6b4a;
+  border: 1px solid #bfdcc8;
+}
+
+.auth-title {
+  font-family: 'Baloo 2', cursive !important;
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
+  color: #2d2016 !important;
+}
+
+.auth-subtitle {
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  line-height: 1.6 !important;
+  color: #7a6352 !important;
+}
+
+.auth-form-fields {
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.auth-form-fields .MuiFormControl-root {
+  background: #fff;
+}
+
+.auth-form-fields .MuiOutlinedInput-root {
+  border-radius: 14px !important;
+  font-family: 'Nunito', sans-serif !important;
+}
+
+.auth-form-fields .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #1b6b4a !important;
+}
+
+.auth-form-fields .MuiInputLabel-root.Mui-focused {
+  color: #1b6b4a !important;
+}
+
+.auth-input-icon {
+  color: #b09a86;
+  margin-right: 10px;
+}
+
+/* ── PASSWORD TOGGLE ── */
+.auth-password-wrap {
+  position: relative;
+}
+
+.auth-password-wrap .MuiOutlinedInput-input {
+  padding-right: 48px !important;
+}
+
+.auth-password-toggle {
+  position: absolute !important;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  color: #a18c79 !important;
+}
+
+.auth-password-toggle:hover {
+  color: #1b6b4a !important;
+  background: transparent !important;
+}
+
+/* ── ERROR MESSAGE ── */
+.auth-error {
+  margin-top: 4px !important;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #fdecea;
+  border: 1px solid #f5c2bd;
+  color: #b3261e !important;
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+}
+
+/* ── MODE SWITCH ── */
+.auth-switch {
+  text-align: center;
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 600 !important;
+  color: #7a6352 !important;
+}
+
+.auth-switch-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 4px;
+  font: inherit;
+  font-weight: 800;
+  color: #d4641a;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-switch-link:hover {
+  color: #1b6b4a;
+}
+
+.auth-submit-btn {
+  min-height: 48px !important;
+  border-radius: 14px !important;
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 0.96rem !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  margin-top: 6px !important;
+}
+
+.auth-submit-btn--signup {
+  background: linear-gradient(135deg, #f07a2a 0%, #d4641a 100%) !important;
+  box-shadow: 0 12px 28px rgba(240, 122, 42, 0.28) !important;
+}
+
+.auth-submit-btn--signup:hover {
+  background: linear-gradient(135deg, #db6c22 0%, #c75b16 100%) !important;
+}
+
+.auth-submit-btn--login {
+  background: linear-gradient(135deg, #1b6b4a 0%, #145439 100%) !important;
+  box-shadow: 0 12px 28px rgba(27, 107, 74, 0.25) !important;
+}
+
+.auth-submit-btn--login:hover {
+  background: linear-gradient(135deg, #165b3f 0%, #0f4930 100%) !important;
+}
+
+.auth-footnote {
+  font-family: 'Nunito', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  line-height: 1.55 !important;
+  color: #a18c79 !important;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .auth-panel,
+  .auth-panel--login {
+    min-height: unset;
+  }
+
+  .auth-visual {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-modal {
+    padding: 12px;
+  }
+
+  .auth-panel,
+  .auth-panel--login {
+    border-radius: 22px;
+  }
+
+  .auth-form-side,
+  .auth-form-side--login {
+    padding: 28px 20px;
+  }
+
+  .auth-visual-overlay {
+    padding: 24px 20px;
+  }
+
+  .auth-title {
+    font-size: 1.7rem !important;
+  }
+
+  .auth-visual-title {
+    font-size: 1.7rem !important;
+  }
+}

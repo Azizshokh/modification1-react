@@ -1,9 +1,21 @@
-import React from "react";
-import { Box, Button, Container, IconButton, Stack } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Stack,
+} from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import { NavLink } from "react-router-dom";
 
+import AuthenticationModal, { useLogout } from "../auth";
+import { useGlobals } from "../../hooks/useGlobals";
 import Basket from "./Basket";
 import type { CartItem } from "../../../lib/types/search";
 import "../../../css/homeNavbar.css";
@@ -23,8 +35,34 @@ export function HomeNavbar({
   onDelete,
   onDeleteAll,
 }: HomeNavbarProps): React.JSX.Element {
-  // Test uchun: true qilsangiz user icon + Orders/MyPage chiqadi, null holatda Login + SignUp chiqadi.
-  const authMember: boolean | null = null;
+  const { authMember } = useGlobals();
+  const logout = useLogout();
+  const [signupOpen, setSignupOpen] = useState<boolean>(false);
+  const [loginOpen, setLoginOpen] = useState<boolean>(false);
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(
+    null,
+  );
+  const userMenuOpen = Boolean(userMenuAnchor);
+
+  const handleSignupClose = () => setSignupOpen(false);
+  const handleLoginOpen = () => setLoginOpen(true);
+  const handleLoginClose = () => setLoginOpen(false);
+  const handleSwitchToLogin = () => {
+    setSignupOpen(false);
+    setLoginOpen(true);
+  };
+  const handleSwitchToSignup = () => {
+    setLoginOpen(false);
+    setSignupOpen(true);
+  };
+  const handleUserMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+  const handleUserMenuClose = () => setUserMenuAnchor(null);
+  const handleLogout = () => {
+    setUserMenuAnchor(null);
+    logout();
+  };
 
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }): string =>
     isActive ? "nav-link active" : "nav-link";
@@ -99,22 +137,53 @@ export function HomeNavbar({
           />
 
           {!authMember ? (
-            <>
-              <Button
-                className="login-btn"
-                startIcon={<PersonIcon sx={{ fontSize: 18 }} />}
-                sx={{ textTransform: "none" }}
-              >
-                Login
-              </Button>
-            </>
+            <Button
+              className="login-btn"
+              startIcon={<PersonIcon sx={{ fontSize: 18 }} />}
+              sx={{ textTransform: "none" }}
+              onClick={handleLoginOpen}
+            >
+              Login
+            </Button>
           ) : (
-            <IconButton className="user-btn" aria-label="User profile">
-              <PersonIcon sx={{ color: "white", fontSize: 20 }} />
-            </IconButton>
+            <>
+              <IconButton
+                className="user-btn"
+                aria-label="User profile"
+                aria-haspopup="true"
+                aria-expanded={userMenuOpen ? "true" : undefined}
+                onClick={handleUserMenuOpen}
+              >
+                <PersonIcon sx={{ color: "white", fontSize: 20 }} />
+              </IconButton>
+              <Menu
+                anchorEl={userMenuAnchor}
+                open={userMenuOpen}
+                onClose={handleUserMenuClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                slotProps={{ paper: { className: "user-menu-paper" } }}
+              >
+                <MenuItem className="user-menu-logout" onClick={handleLogout}>
+                  <ListItemIcon>
+                    <LogoutIcon fontSize="small" sx={{ color: "#e05c2a" }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </MenuItem>
+              </Menu>
+            </>
           )}
         </Stack>
       </Container>
+
+      <AuthenticationModal
+        signupOpen={signupOpen}
+        loginOpen={loginOpen}
+        handleSignupClose={handleSignupClose}
+        handleLoginClose={handleLoginClose}
+        onSwitchToLogin={handleSwitchToLogin}
+        onSwitchToSignup={handleSwitchToSignup}
+      />
     </Box>
   );
 }

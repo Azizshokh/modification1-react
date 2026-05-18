@@ -124,6 +124,27 @@
 	color: #0b5d57;
 }
 
+.other-navbar .navbar-content .navbar-actions .signup-btn {
+	min-width: 110px;
+	padding: 10px 20px;
+	border: 1.5px solid #e05c2a;
+	border-radius: 30px;
+	background: #e05c2a;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	font-weight: 700;
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s;
+}
+
+.other-navbar .navbar-content .navbar-actions .signup-btn:hover {
+	background: #c94e21;
+	border-color: #c94e21;
+}
+
 .other-navbar .navbar-content .navbar-actions .user-btn {
 	width: 44px;
 	height: 44px;
@@ -140,6 +161,8 @@
 .other-navbar .navbar-content .navbar-actions .user-btn:hover {
 	background: #0b5d57;
 }
+
+/* User dropdown menu (shared with homeNavbar via .user-menu-paper) */
 
 /** RESPONSIVE **/
 

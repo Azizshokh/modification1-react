@@ -8,6 +8,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import theme from "./app/MaterialTheme";
 import { store } from "./app/store";
 import App from "./app/App";
+import { GlobalProvider } from "./app/hooks/useGlobals";
 import reportWebVitals from "./reportWebVitals";
 
 import "./css/index.css";
@@ -20,14 +21,16 @@ root.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <App />
-        </Router>
+        <GlobalProvider>
+          <Router
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }}
+          >
+            <App />
+          </Router>
+        </GlobalProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
