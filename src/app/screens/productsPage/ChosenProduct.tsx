@@ -24,6 +24,7 @@ import { setChosenProduct } from "./slice";
 import { retrieveChosenProduct } from "./selector";
 import type { Product } from "../../../lib/types/product";
 import ProductService from "../../services/ProductService";
+import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { serverApi } from "../../../lib/config";
 
@@ -64,7 +65,7 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
     product
       .getProduct(productId)
       .then((data) => setChosenProduct(data))
-      .catch((err) => console.log(err));
+      .catch((err) => sweetErrorHandling(err));
   }, [productId]);
 
   const handleOrder = () => {

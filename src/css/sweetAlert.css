@@ -1,0 +1,70 @@
+/* =========================================================
+   SWEETALERT2 — BRAND OVERRIDES
+   Brand palette: green #1b6b4a / #0f766e — orange #e05c2a
+   ========================================================= */
+
+.swal2-popup.petfood-popup {
+    font-family: "Nunito", "Segoe UI", sans-serif;
+    border-radius: 16px;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 0 18px 40px rgba(15, 118, 110, 0.22);
+}
+
+.swal2-popup.petfood-popup .swal2-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f766e;
+}
+
+.swal2-popup.petfood-popup .swal2-html-container,
+.swal2-popup.petfood-popup .swal2-content {
+    font-size: 0.95rem;
+    color: #2f3a37;
+}
+
+/* =========================================================
+   CONFIRM BUTTON — BRAND GREEN
+   ========================================================= */
+.swal2-popup.petfood-popup .swal2-confirm.petfood-confirm {
+    background: #1b6b4a !important;
+    border: none !important;
+    border-radius: 999px;
+    padding: 0.55rem 1.6rem;
+    font-weight: 700;
+    box-shadow: none !important;
+    transition: background 0.2s;
+}
+
+.swal2-popup.petfood-popup .swal2-confirm.petfood-confirm:hover,
+.swal2-popup.petfood-popup .swal2-confirm.petfood-confirm:focus {
+    background: #0b5d57 !important;
+}
+
+/* =========================================================
+   TOAST VARIANT
+   ========================================================= */
+.swal2-toast.petfood-toast {
+    font-family: "Nunito", "Segoe UI", sans-serif;
+    border-radius: 12px !important;
+    border-left: 4px solid #1b6b4a;
+    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18) !important;
+}
+
+.swal2-toast.petfood-toast .swal2-title {
+    color: #0f766e;
+    font-weight: 700;
+}
+
+.swal2-toast.petfood-toast .swal2-timer-progress-bar {
+    background: #1b6b4a !important;
+}
+
+/* Error-flavoured toast still gets brand orange accent */
+.swal2-icon.swal2-error {
+    border-color: #e05c2a !important;
+    color: #e05c2a !important;
+}
+
+.swal2-icon.swal2-error [class^="swal2-x-mark-line"] {
+    background-color: #e05c2a !important;
+}

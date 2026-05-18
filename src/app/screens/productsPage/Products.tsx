@@ -33,6 +33,7 @@ import { setProducts } from "./slice";
 import { retrieveProducts } from "./selector";
 import type { Product, ProductInquiry } from "../../../lib/types/product";
 import ProductService from "../../services/ProductService";
+import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { serverApi } from "../../../lib/config";
 import { useNavigate } from "react-router-dom";
@@ -124,7 +125,7 @@ const ProductsPage: React.FC<ProductPageProps> = ({
     product
       .getProducts(productSearch)
       .then((data) => setProducts(data))
-      .catch((err) => console.log(err));
+      .catch((err) => sweetErrorHandling(err));
   }, [productSearch]);
 
   useEffect(() => {

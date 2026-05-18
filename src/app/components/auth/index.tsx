@@ -26,7 +26,10 @@ import type {
   MemberInput,
 } from "../../../lib/types/member";
 import MemberService from "../../services/MemberService";
-import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import {
+  sweetErrorHandling,
+  sweetTopSmallSuccessAlert,
+} from "../../../lib/sweetAlert";
 import { useGlobals } from "../../hooks/useGlobals";
 import "../../../css/auth/index.css";
 
@@ -39,6 +42,7 @@ export const useLogout = (): (() => Promise<void>) => {
       console.warn("logout: server call failed:", err);
     } finally {
       setAuthMember(null);
+      sweetTopSmallSuccessAlert("Logged out successfully", 1800);
     }
   };
 };
@@ -235,6 +239,7 @@ export default function AuthenticationModal({
 
       persistAuthMember(result);
       closeSignupModal();
+      sweetTopSmallSuccessAlert(`Welcome to PetFood, ${result.memberNick}!`);
     } catch (err) {
       const message = extractServerError(
         err,
@@ -273,6 +278,7 @@ export default function AuthenticationModal({
 
       persistAuthMember(result);
       closeLoginModal();
+      sweetTopSmallSuccessAlert(`Welcome back, ${result.memberNick}!`);
     } catch (err) {
       const message = extractServerError(
         err,

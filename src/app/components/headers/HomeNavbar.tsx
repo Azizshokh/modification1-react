@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Container,
@@ -16,6 +17,7 @@ import { NavLink } from "react-router-dom";
 
 import AuthenticationModal, { useLogout } from "../auth";
 import { useGlobals } from "../../hooks/useGlobals";
+import { serverApi } from "../../../lib/config";
 import Basket from "./Basket";
 import type { CartItem } from "../../../lib/types/search";
 import "../../../css/homeNavbar.css";
@@ -154,7 +156,18 @@ export function HomeNavbar({
                 aria-expanded={userMenuOpen ? "true" : undefined}
                 onClick={handleUserMenuOpen}
               >
-                <PersonIcon sx={{ color: "white", fontSize: 20 }} />
+                <Avatar
+                  className="user-avatar"
+                  alt={authMember.memberNick}
+                  src={
+                    authMember.memberImage
+                      ? `${serverApi}/${authMember.memberImage}`
+                      : undefined
+                  }
+                  sx={{ width: 36, height: 36, bgcolor: "transparent" }}
+                >
+                  <PersonIcon sx={{ color: "white", fontSize: 20 }} />
+                </Avatar>
               </IconButton>
               <Menu
                 anchorEl={userMenuAnchor}

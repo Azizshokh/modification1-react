@@ -24,6 +24,7 @@
     "sweetalert2": "^11.4.23",
     "swiper": "^12.1.4",
     "typescript": "^5",
+    "universal-cookie": "^8.1.2",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {

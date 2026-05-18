@@ -8,7 +8,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import theme from "./app/MaterialTheme";
 import { store } from "./app/store";
 import App from "./app/App";
-import { GlobalProvider } from "./app/hooks/useGlobals";
+import ContextProvider from "./app/context/ContextProvider";
 import reportWebVitals from "./reportWebVitals";
 
 import "./css/index.css";
@@ -21,7 +21,7 @@ root.render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <GlobalProvider>
+        <ContextProvider>
           <Router
             future={{
               v7_startTransition: true,
@@ -30,7 +30,7 @@ root.render(
           >
             <App />
           </Router>
-        </GlobalProvider>
+        </ContextProvider>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>,
