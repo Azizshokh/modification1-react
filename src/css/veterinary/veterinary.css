@@ -156,11 +156,13 @@
 }
 
 .vet-form-col {
-  flex: 1.4;
+  flex: 1.9;
+  min-width: 0;
 }
 
 .vet-info-col {
   flex: 1;
+  min-width: 0;
   position: sticky;
   top: 24px;
 }
@@ -648,5 +650,202 @@
 
   .vet-feature-card {
     padding: 10px 14px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   DONE / CONFIRMATION CARD
+═══════════════════════════════════════════ */
+.vet-done-card {
+  position: relative;
+  background: linear-gradient(180deg, var(--vet-green-ultra) 0%, var(--vet-white) 100%);
+  border: 1.5px solid var(--vet-green-light);
+  border-radius: var(--vet-radius-lg);
+  box-shadow: var(--vet-shadow-sm);
+  padding: 40px 32px 32px;
+  text-align: center;
+  overflow: hidden;
+  animation: vetDonePop 0.45s ease-out;
+}
+
+.vet-done-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--vet-green-dark), var(--vet-green), var(--vet-green-light));
+}
+
+@keyframes vetDonePop {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.vet-done-icon {
+  width: 92px;
+  height: 92px;
+  margin: 4px auto 18px;
+  border-radius: 50%;
+  background: var(--vet-green-pale);
+  border: 4px solid var(--vet-white);
+  box-shadow: 0 6px 22px rgba(74, 124, 89, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vet-done-icon svg {
+  color: var(--vet-green-dark);
+}
+
+.vet-done-title {
+  font-family: var(--vet-font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--vet-text-dark);
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.vet-done-subtitle {
+  font-size: 14px;
+  color: var(--vet-text-mid);
+  margin: 0 auto 18px;
+  max-width: 380px;
+  line-height: 1.55;
+}
+
+.vet-done-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #FFF3D6;
+  color: #8a6300;
+  border: 1px solid #F2C94C;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: 22px;
+}
+
+.vet-done-summary {
+  background: var(--vet-white);
+  border: 1.5px dashed var(--vet-border);
+  border-radius: var(--vet-radius-md);
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vet-done-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 13.5px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(195, 224, 204, 0.55);
+}
+
+.vet-done-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.vet-done-row.total {
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1.5px solid var(--vet-green-pale);
+  border-bottom: none;
+}
+
+.vet-done-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--vet-text-mid);
+  font-weight: 700;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.05em;
+}
+
+.vet-done-val {
+  color: var(--vet-text-dark);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.vet-done-val.price {
+  font-family: var(--vet-font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--vet-green-dark);
+}
+
+.vet-done-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.vet-done-btn.secondary {
+  background: var(--vet-white) !important;
+  color: var(--vet-green-dark) !important;
+  border: 1.5px solid var(--vet-green) !important;
+  border-radius: 999px !important;
+  padding: 10px 26px !important;
+  font-family: var(--vet-font-body) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+  box-shadow: 0 2px 10px rgba(74, 124, 89, 0.12) !important;
+  transition: all 0.18s ease !important;
+}
+
+.vet-done-btn.secondary:hover {
+  background: var(--vet-green) !important;
+  color: var(--vet-white) !important;
+}
+
+.vet-done-footnote {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--vet-text-light);
+  font-weight: 600;
+}
+
+.vet-done-footnote code {
+  background: var(--vet-green-ultra);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--vet-text-mid);
+  border: 1px solid var(--vet-border);
+}
+
+@media (max-width: 600px) {
+  .vet-done-card {
+    padding: 30px 18px 22px;
+  }
+  .vet-done-title {
+    font-size: 22px;
+  }
+  .vet-done-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .vet-done-val {
+    text-align: left;
   }
 }

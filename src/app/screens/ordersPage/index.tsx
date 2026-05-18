@@ -30,9 +30,16 @@ import {
 import { setFinishedOrders, setPausedOrders, setProcessOrders } from "./slice";
 import {
   retrieveFinishedOrders,
-  retrievePausedOrders,
   retrieveProcessOrders,
+  retrievePausedOrders,
 } from "./selector";
+import {
+  readVetAppointments,
+  writeVetAppointments,
+  VetAppointment,
+} from "../veterinaryPage";
+import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import PetsIcon from "@mui/icons-material/Pets";
 import "../../../css/orders/orders.css";
 
 const PAGE_LIMIT = 50;
@@ -182,6 +189,23 @@ export function OrdersPage(): React.JSX.Element {
   const [orderTab, setOrderTab] = useState<OrderTabStatus>(OrderStatus.PAUSE);
   const [loading, setLoading] = useState<boolean>(false);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [vetAppointments, setVetAppointments] = useState<VetAppointment[]>([]);
+
+  const refreshVetAppointments = useCallback(() => {
+    if (!authMember) {
+      setVetAppointments([]);
+      return;
+    }
+    const mine = readVetAppointments().filter(
+      (a) => a.memberId === authMember._id,
+    );
+    setVetAppointments(mine);
+  }, [authMember]);
+
+  const pendingVetAppointments = useMemo(
+    () => vetAppointments.filter((a) => a.status === "PAUSE"),
+    [vetAppointments],
+  );
 
   const ordersByStatus = useMemo<Record<OrderTabStatus, Order[]>>(
     () => ({
@@ -262,7 +286,23 @@ export function OrdersPage(): React.JSX.Element {
 
   useEffect(() => {
     loadOrders().then();
-  }, [authMember, loadOrders, orderBuilder]);
+    refreshVetAppointments();
+  }, [authMember, loadOrders, orderBuilder, refreshVetAppointments]);
+
+  const cancelVetAppointment = async (appointmentId: string) => {
+    const confirmed = window.confirm(
+      "Cancel this veterinary appointment request?",
+    );
+    if (!confirmed) return;
+    try {
+      const all = readVetAppointments();
+      writeVetAppointments(all.filter((a) => a._id !== appointmentId));
+      refreshVetAppointments();
+      await sweetTopSmallSuccessAlert("Appointment cancelled");
+    } catch (err) {
+      await sweetErrorHandling(err);
+    }
+  };
 
   const updateOrderStatus = async (
     orderId: string,
@@ -523,6 +563,96 @@ export function OrdersPage(): React.JSX.Element {
             </div>
           )}
         </div>
+
+        {/* ── Veterinary Appointments — separate section ── */}
+        {authMember && (
+          <div className="op-section op-vet-card-section">
+            <div className="op-section-header">
+              <div className="op-section-icon-wrap green">
+                <MedicalServicesIcon sx={{ fontSize: 22 }} />
+              </div>
+              <div>
+                <Typography className="op-section-title">
+                  Veterinary Appointments
+                </Typography>
+                <Typography className="op-section-sub">
+                  {pendingVetAppointments.length > 0
+                    ? `${pendingVetAppointments.length} request${pendingVetAppointments.length === 1 ? "" : "s"} awaiting admin confirmation`
+                    : "No pending vet appointments"}
+                </Typography>
+              </div>
+            </div>
+
+            {pendingVetAppointments.length === 0 ? (
+              <div className="op-empty">
+                <PetsIcon className="op-empty-icon" />
+                <p>You have no veterinary appointment requests.</p>
+              </div>
+            ) : (
+              <div className="op-cards">
+                {pendingVetAppointments.map((a) => (
+                  <div key={a._id} className="op-order-card op-vet-card">
+                    <div className="op-order-main">
+                      <div className="op-order-icon-wrap vet">
+                        <PetsIcon sx={{ fontSize: 26 }} />
+                      </div>
+
+                      <div className="op-order-body">
+                        <div className="op-order-top">
+                          <div>
+                            <p className="op-order-name">
+                              {a.serviceType.replace(/_/g, " ")} — {a.petName}
+                            </p>
+                          </div>
+                          <span className="op-status-badge vet-pending">
+                            <HourglassEmptyIcon sx={{ fontSize: 12 }} />
+                            Awaiting Admin
+                          </span>
+                        </div>
+
+                        <div className="op-order-meta">
+                          <span className="op-meta-item">Pet: {a.petType}</span>
+                          <span className="op-meta-item">
+                            {a.serviceLocation}
+                          </span>
+                          <span className="op-meta-item">
+                            <CalendarTodayIcon sx={{ fontSize: 12 }} />
+                            {a.serviceDate} · {a.serviceTime}
+                          </span>
+                        </div>
+
+                        {a.serviceAddress && (
+                          <p className="op-vet-address">
+                            📍 {a.serviceAddress}
+                          </p>
+                        )}
+                        {a.specialNote && (
+                          <p className="op-vet-note">Note: {a.specialNote}</p>
+                        )}
+                      </div>
+
+                      <div className="op-order-right">
+                        <p className="op-order-total">
+                          {fmtPrice(a.servicePrice)}
+                        </p>
+                        <div className="op-order-actions">
+                          <button
+                            className="op-action-btn cancel"
+                            type="button"
+                            onClick={() => cancelVetAppointment(a._id)}
+                          >
+                            <DeleteOutlineIcon sx={{ fontSize: 14 }} />
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </Container>
     </div>
   );

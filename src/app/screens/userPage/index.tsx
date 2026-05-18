@@ -54,7 +54,7 @@ export function UserPage() {
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <Box className={"menu-name"}>
                 <ManageAccountsIcon className={"menu-icon"} />
-                Modify Member Details
+                Member Details
               </Box>
               <Box className={"menu-content"}>
                 <Settings />

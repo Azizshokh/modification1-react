@@ -164,6 +164,14 @@
   color: var(--op-orange);
 }
 
+.op-section-icon-wrap.green {
+  background: var(--op-green-pale);
+}
+
+.op-section-icon-wrap.green svg {
+  color: var(--op-green-dark);
+}
+
 .op-section-title {
   font-family: var(--op-font-display) !important;
   font-size: 22px !important;
@@ -680,4 +688,73 @@
     grid-column: 2;
     justify-self: start;
   }
+}
+
+/* ──────────────────────────────────────────────
+   VET APPOINTMENTS (pending admin confirmation)
+─────────────────────────────────────────────── */
+.op-vet-section {
+  margin-bottom: 22px;
+  padding: 14px 16px 16px;
+  background: linear-gradient(180deg, #F2F9F4 0%, #FFFFFF 100%);
+  border: 1.5px dashed rgba(74, 124, 89, 0.45);
+  border-radius: 14px;
+}
+.op-vet-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2d5b3e;
+  margin-bottom: 12px;
+}
+.op-vet-section-title svg { color: #4a7c59; }
+.op-vet-section-tag {
+  margin-left: auto;
+  background: #FFF3D6;
+  color: #8a6300;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #F2C94C;
+}
+.op-vet-card {
+  border-left: 4px solid #4a7c59 !important;
+  background: #FFFFFF !important;
+}
+.op-order-icon-wrap.vet {
+  background: linear-gradient(135deg, #4a7c59, #2d5b3e) !important;
+  color: #fff !important;
+}
+.op-order-icon-wrap.vet svg { color: #fff !important; }
+.op-status-badge.vet-pending {
+  background: #FFF3D6;
+  color: #8a6300;
+  border: 1px solid #F2C94C;
+}
+.op-vet-address,
+.op-vet-note {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: #5a4a3a;
+  line-height: 1.5;
+}
+.op-vet-note {
+  font-style: italic;
+  color: #7a6a5a;
+}
+
+/* Standalone vet appointments section card (below product orders) */
+.op-vet-card-section {
+  border-top: 4px solid #4a7c59;
+}
+.op-vet-card-section .op-section-header {
+  border-bottom-color: rgba(74, 124, 89, 0.20);
 }
