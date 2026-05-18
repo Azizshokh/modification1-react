@@ -9,12 +9,9 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import VerifiedOutlinedIcon from "@mui/icons-material/VerifiedOutlined";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -55,6 +52,7 @@ const ChosenProduct: React.FC = () => {
   const [isFav, setIsFav] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [orderedNow, setOrderedNow] = useState(false);
+  const [ratingValue, setRatingValue] = useState<number | null>(4.5);
 
   useEffect(() => {
     if (!productId) return;
@@ -156,11 +154,6 @@ const ChosenProduct: React.FC = () => {
                 )}
               </IconButton>
             </Tooltip>
-            <Tooltip title="Share">
-              <IconButton className="action-icon-btn" size="small">
-                <ShareOutlinedIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
           </Box>
 
           {/* Category breadcrumb */}
@@ -184,25 +177,6 @@ const ChosenProduct: React.FC = () => {
 
           {/* Quantity + Price row */}
           <Box className="qty-price-row">
-            {/* Quantity */}
-            <Box className="qty-box">
-              <IconButton
-                className="qty-btn qty-minus"
-                size="small"
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              >
-                <RemoveIcon fontSize="small" />
-              </IconButton>
-              <Typography className="qty-value">{quantity}</Typography>
-              <IconButton
-                className="qty-btn qty-plus"
-                size="small"
-                onClick={() => setQuantity((q) => q + 1)}
-              >
-                <AddIcon fontSize="small" />
-              </IconButton>
-            </Box>
-
             {/* Price */}
             <Box className="price-block">
               <Typography className="current-price">
@@ -210,11 +184,12 @@ const ChosenProduct: React.FC = () => {
               </Typography>
               <Box className="price-rating">
                 <Rating
-                  value={4.5}
+                  value={ratingValue}
                   precision={0.5}
-                  readOnly
                   size="small"
                   className="chosen-rating"
+                  onChange={(_e, newValue) => setRatingValue(newValue)}
+                  sx={{ cursor: "pointer" }}
                 />
                 <Box className="product-view">
                   <RemoveRedEyeIcon sx={{ fontSize: 14, mr: "4px" }} />
@@ -229,14 +204,6 @@ const ChosenProduct: React.FC = () => {
           {/* Action buttons */}
           <Box className="chosen-actions">
             <Button
-              variant="contained"
-              className={`order-now-btn ${orderedNow ? "ordered" : ""}`}
-              onClick={handleOrder}
-              disableElevation
-            >
-              {orderedNow ? "✓ Ordered!" : "Order Now"}
-            </Button>
-            <Button
               variant="outlined"
               className={`add-cart-btn ${addedToCart ? "carted" : ""}`}
               onClick={handleCart}
@@ -247,7 +214,7 @@ const ChosenProduct: React.FC = () => {
               }
               disableElevation
             >
-              {addedToCart ? "✓ Added!" : "Add to Card"}
+              {addedToCart ? "✓ Added!" : "Add to Cart"}
             </Button>
           </Box>
 
