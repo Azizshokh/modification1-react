@@ -12,9 +12,16 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
 
 import type { CartItem } from "../../../lib/types/search";
-import { serverApi } from "../../../lib/config";
+import { Messages, serverApi } from "../../../lib/config";
+import { useGlobals } from "../../hooks/useGlobals";
+import OrderService from "../../services/OrderService";
+import {
+  sweetErrorHandling,
+  sweetTopSmallSuccessAlert,
+} from "../../../lib/sweetAlert";
 import "../../../css/home/basket.css";
 
 // ─── Sub-components ──────────────────────────────────────────────
@@ -133,6 +140,9 @@ export default function Basket({
   onDeleteAll,
 }: BasketProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isOrdering, setIsOrdering] = useState<boolean>(false);
+  const { authMember, setOrderBuilder } = useGlobals();
+  const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
 
@@ -150,6 +160,30 @@ export default function Basket({
   const isFreeDelivery = subtotal >= FREE_DELIVERY;
   const deliveryCost = isFreeDelivery ? 0 : DELIVERY_FEE;
   const total = subtotal + deliveryCost;
+
+  const proceedOrderHandler = async () => {
+    if (cartItems.length === 0 || isOrdering) return;
+    if (!authMember) {
+      await sweetErrorHandling(new Error(Messages.error2));
+      return;
+    }
+
+    setIsOrdering(true);
+    try {
+      const orderService = new OrderService();
+      await orderService.createOrder(cartItems);
+
+      onDeleteAll();
+      setOrderBuilder(new Date());
+      handleClose();
+      await sweetTopSmallSuccessAlert("Order placed successfully", 1800);
+      navigate("/orders");
+    } catch (err) {
+      await sweetErrorHandling(err);
+    } finally {
+      setIsOrdering(false);
+    }
+  };
 
   return (
     <div>
@@ -272,9 +306,10 @@ export default function Basket({
                 fullWidth
                 className="basket-order-btn"
                 startIcon={<ShoppingCartIcon />}
-                onClick={handleClose}
+                onClick={proceedOrderHandler}
+                disabled={isOrdering}
               >
-                Place Order
+                {isOrdering ? "Placing..." : "Place Order"}
               </Button>
             </div>
           )}
