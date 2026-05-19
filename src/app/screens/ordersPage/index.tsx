@@ -34,10 +34,13 @@ import {
   retrievePausedOrders,
 } from "./selector";
 import {
+  deleteVetAppointment,
   readVetAppointments,
-  writeVetAppointments,
+  startVetAppointmentStatusSync,
+  subscribeVetAppointments,
+  syncVetAppointmentsFromAdmin,
   VetAppointment,
-} from "../veterinaryPage";
+} from "../../services/vetSlotStore";
 import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
 import PetsIcon from "@mui/icons-material/Pets";
 import "../../../css/orders/orders.css";
@@ -127,6 +130,41 @@ function statusIcon(status: OrderStatus): React.ReactNode {
   }
 }
 
+function vetStatusLabel(status: VetAppointment["status"]): string {
+  switch (status) {
+    case "ACTIVE":
+    case "PAUSE":
+      return "Awaiting Admin";
+    case "ACCEPTED":
+      return "Accepted";
+    case "COMPLETED":
+      return "Completed";
+    case "CANCELLED":
+    case "DELETE":
+      return "Cancelled";
+    default:
+      return "Awaiting Admin";
+  }
+}
+
+function vetStatusIcon(status: VetAppointment["status"]): React.ReactNode {
+  switch (status) {
+    case "ACCEPTED":
+      return <CheckCircleIcon sx={{ fontSize: 12 }} />;
+    case "COMPLETED":
+      return <DoneAllIcon sx={{ fontSize: 12 }} />;
+    case "CANCELLED":
+    case "DELETE":
+      return <DeleteOutlineIcon sx={{ fontSize: 12 }} />;
+    default:
+      return <HourglassEmptyIcon sx={{ fontSize: 12 }} />;
+  }
+}
+
+function vetDisplayPrice(appointment: VetAppointment): number {
+  return appointment.status === "COMPLETED" ? 0 : appointment.originalServicePrice;
+}
+
 function getProductData(order: Order): Product[] {
   return Array.isArray(order.productData) ? order.productData : [];
 }
@@ -190,6 +228,7 @@ export function OrdersPage(): React.JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [vetAppointments, setVetAppointments] = useState<VetAppointment[]>([]);
+  const [vetStatusRefreshing, setVetStatusRefreshing] = useState(false);
 
   const refreshVetAppointments = useCallback(() => {
     if (!authMember) {
@@ -202,10 +241,7 @@ export function OrdersPage(): React.JSX.Element {
     setVetAppointments(mine);
   }, [authMember]);
 
-  const pendingVetAppointments = useMemo(
-    () => vetAppointments.filter((a) => a.status === "PAUSE"),
-    [vetAppointments],
-  );
+  const activeVetAppointments = vetAppointments;
 
   const ordersByStatus = useMemo<Record<OrderTabStatus, Order[]>>(
     () => ({
@@ -289,18 +325,45 @@ export function OrdersPage(): React.JSX.Element {
     refreshVetAppointments();
   }, [authMember, loadOrders, orderBuilder, refreshVetAppointments]);
 
+  useEffect(() => {
+    return subscribeVetAppointments(refreshVetAppointments);
+  }, [refreshVetAppointments]);
+
+  useEffect(() => {
+    if (!authMember) return;
+
+    return startVetAppointmentStatusSync(
+      authMember._id,
+      refreshVetAppointments,
+    );
+  }, [authMember, refreshVetAppointments]);
+
   const cancelVetAppointment = async (appointmentId: string) => {
     const confirmed = window.confirm(
       "Cancel this veterinary appointment request?",
     );
     if (!confirmed) return;
     try {
-      const all = readVetAppointments();
-      writeVetAppointments(all.filter((a) => a._id !== appointmentId));
+      deleteVetAppointment(appointmentId);
       refreshVetAppointments();
       await sweetTopSmallSuccessAlert("Appointment cancelled");
     } catch (err) {
       await sweetErrorHandling(err);
+    }
+  };
+
+  const refreshVetStatusFromBackend = async () => {
+    if (!authMember || vetStatusRefreshing) return;
+
+    setVetStatusRefreshing(true);
+    try {
+      await syncVetAppointmentsFromAdmin(authMember._id);
+      refreshVetAppointments();
+      await sweetTopSmallSuccessAlert("Veterinary status refreshed", 1200);
+    } catch (err) {
+      await sweetErrorHandling(err);
+    } finally {
+      setVetStatusRefreshing(false);
     }
   };
 
@@ -576,21 +639,30 @@ export function OrdersPage(): React.JSX.Element {
                   Veterinary Appointments
                 </Typography>
                 <Typography className="op-section-sub">
-                  {pendingVetAppointments.length > 0
-                    ? `${pendingVetAppointments.length} request${pendingVetAppointments.length === 1 ? "" : "s"} awaiting admin confirmation`
-                    : "No pending vet appointments"}
+                  {activeVetAppointments.length > 0
+                    ? `${activeVetAppointments.length} appointment${activeVetAppointments.length === 1 ? "" : "s"} with realtime admin status`
+                    : "No vet appointments"}
                 </Typography>
               </div>
+              <button
+                className="op-refresh-btn"
+                type="button"
+                onClick={refreshVetStatusFromBackend}
+                disabled={vetStatusRefreshing}
+              >
+                <RefreshIcon sx={{ fontSize: 16 }} />
+                {vetStatusRefreshing ? "Refreshing..." : "Refresh status"}
+              </button>
             </div>
 
-            {pendingVetAppointments.length === 0 ? (
+            {activeVetAppointments.length === 0 ? (
               <div className="op-empty">
                 <PetsIcon className="op-empty-icon" />
                 <p>You have no veterinary appointment requests.</p>
               </div>
             ) : (
               <div className="op-cards">
-                {pendingVetAppointments.map((a) => (
+                {activeVetAppointments.map((a) => (
                   <div key={a._id} className="op-order-card op-vet-card">
                     <div className="op-order-main">
                       <div className="op-order-icon-wrap vet">
@@ -604,9 +676,11 @@ export function OrdersPage(): React.JSX.Element {
                               {a.serviceType.replace(/_/g, " ")} — {a.petName}
                             </p>
                           </div>
-                          <span className="op-status-badge vet-pending">
-                            <HourglassEmptyIcon sx={{ fontSize: 12 }} />
-                            Awaiting Admin
+                          <span
+                            className={`op-status-badge vet-${a.status.toLowerCase()}`}
+                          >
+                            {vetStatusIcon(a.status)}
+                            {vetStatusLabel(a.status)}
                           </span>
                         </div>
 
@@ -633,18 +707,20 @@ export function OrdersPage(): React.JSX.Element {
 
                       <div className="op-order-right">
                         <p className="op-order-total">
-                          {fmtPrice(a.servicePrice)}
+                          {fmtPrice(vetDisplayPrice(a))}
                         </p>
-                        <div className="op-order-actions">
-                          <button
-                            className="op-action-btn cancel"
-                            type="button"
-                            onClick={() => cancelVetAppointment(a._id)}
-                          >
-                            <DeleteOutlineIcon sx={{ fontSize: 14 }} />
-                            Cancel
-                          </button>
-                        </div>
+                        {["PAUSE", "ACTIVE"].includes(a.status) && (
+                          <div className="op-order-actions">
+                            <button
+                              className="op-action-btn cancel"
+                              type="button"
+                              onClick={() => cancelVetAppointment(a._id)}
+                            >
+                              <DeleteOutlineIcon sx={{ fontSize: 14 }} />
+                              Cancel
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

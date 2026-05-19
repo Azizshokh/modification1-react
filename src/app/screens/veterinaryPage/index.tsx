@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Button, Container } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Button, Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import PetsIcon from "@mui/icons-material/Pets";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
@@ -24,50 +24,26 @@ import {
   sweetTopSmallSuccessAlert,
 } from "../../../lib/sweetAlert";
 import { Messages } from "../../../lib/config";
+import {
+  createVetAppointment,
+  getBookedVetSlots,
+  readVetAppointments,
+  startVetAppointmentStatusSync,
+  subscribeVetAppointments,
+} from "../../services/vetSlotStore";
+import type { VetAppointment } from "../../services/vetSlotStore";
 import "../../../css/veterinary/veterinary.css";
 
 /* ── Service pricing (USD) ── */
 const SERVICE_PRICES: Record<string, number> = {
   HOME_TO_HOME: 40,
-  CLINIC_VISIT: 25,
-  ONLINE_CONSULT: 15,
+  CLINIC_TO_CLINIC: 25,
+  ONLINE_CONSULTATION: 15,
   GROOMING: 30,
-  VACCINATION: 20,
 };
 
-export interface VetAppointment {
-  _id: string;
-  memberId: string;
-  memberNick: string;
-  petName: string;
-  petType: string;
-  serviceType: string;
-  serviceLocation: string;
-  serviceAddress: string;
-  serviceDate: string;
-  serviceTime: string;
-  specialNote: string;
-  servicePrice: number;
-  status: "PAUSE" | "PROCESS" | "FINISH" | "DELETE";
-  createdAt: string;
-}
-
-const VET_STORAGE_KEY = "vetAppointments";
-
-export function readVetAppointments(): VetAppointment[] {
-  try {
-    const raw = localStorage.getItem(VET_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-export function writeVetAppointments(list: VetAppointment[]): void {
-  localStorage.setItem(VET_STORAGE_KEY, JSON.stringify(list));
-}
+export type { VetAppointment } from "../../services/vetSlotStore";
+export { readVetAppointments, writeVetAppointments } from "../../services/vetSlotStore";
 
 /* ── Static Data ── */
 const PET_TYPES = [
@@ -75,14 +51,15 @@ const PET_TYPES = [
   { value: "CAT", label: "Cat" },
   { value: "BIRD", label: "Bird" },
   { value: "FISH", label: "Fish" },
+  { value: "RABBIT", label: "Rabbit" },
+  { value: "OTHER", label: "Other" },
 ];
 
 const SERVICE_TYPES = [
   { value: "HOME_TO_HOME", label: "Home to Home" },
-  { value: "CLINIC_VISIT", label: "Clinic Visit" },
-  { value: "ONLINE_CONSULT", label: "Online Consultation" },
+  { value: "CLINIC_TO_CLINIC", label: "Clinic to Clinic" },
+  { value: "ONLINE_CONSULTATION", label: "Online Consultation" },
   { value: "GROOMING", label: "Grooming" },
-  { value: "VACCINATION", label: "Vaccination" },
 ];
 
 const SERVICE_LOCATIONS = [
@@ -103,11 +80,7 @@ const TIME_SLOTS = [
   "17:00",
 ];
 
-// Simulated booked slots — in production these come from backend per selected date
-const BOOKED_SLOTS: Record<string, string[]> = {
-  // example: slots booked by other users for a specific date
-  [new Date().toISOString().split("T")[0]]: ["10:00", "13:00", "15:00"],
-};
+const WEEKEND_TIME_SLOTS = ["10:00", "11:00", "12:00", "13:00", "14:00"];
 
 interface VetFormData {
   petName: string;
@@ -131,15 +104,118 @@ const initialForm: VetFormData = {
   specialNote: "",
 };
 
+function vetStatusText(status: VetAppointment["status"]): string {
+  switch (status) {
+    case "ACTIVE":
+    case "PAUSE":
+      return "Awaiting admin confirmation";
+    case "ACCEPTED":
+      return "Accepted by admin";
+    case "COMPLETED":
+      return "Appointment completed";
+    case "CANCELLED":
+    case "DELETE":
+      return "Appointment cancelled";
+    default:
+      return "Awaiting admin confirmation";
+  }
+}
+
+function vetDisplayPrice(appointment: VetAppointment): number {
+  return appointment.status === "COMPLETED" ? 0 : appointment.originalServicePrice;
+}
+
+function getTodayInputValue(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function isWeekendDate(dateValue: string): boolean {
+  if (!dateValue) return false;
+  const day = new Date(`${dateValue}T00:00:00`).getDay();
+  return day === 0 || day === 6;
+}
+
+function isPastSlot(dateValue: string, slot: string): boolean {
+  if (dateValue !== getTodayInputValue()) return false;
+
+  const [hours, minutes] = slot.split(":").map(Number);
+  const slotDate = new Date();
+  slotDate.setHours(hours, minutes, 0, 0);
+
+  const minimumBookTime = new Date();
+  minimumBookTime.setMinutes(minimumBookTime.getMinutes() + 30);
+
+  return slotDate <= minimumBookTime;
+}
+
 export default function VeterinaryPage() {
   const [form, setForm] = useState<VetFormData>(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [confirmedAppointment, setConfirmedAppointment] =
     useState<VetAppointment | null>(null);
+  const [storeVersion, setStoreVersion] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   const { authMember, setOrderBuilder } = useGlobals();
+
+  useEffect(() => {
+    return subscribeVetAppointments(() => {
+      setStoreVersion((version) => version + 1);
+      setOrderBuilder(new Date());
+    });
+  }, [setOrderBuilder]);
+
+  useEffect(() => {
+    if (!authMember) return;
+
+    return startVetAppointmentStatusSync(authMember._id, () => {
+      setStoreVersion((version) => version + 1);
+      setOrderBuilder(new Date());
+    });
+  }, [authMember, setOrderBuilder]);
+
+  const confirmedAppointmentId = confirmedAppointment?._id;
+
+  useEffect(() => {
+    if (!confirmedAppointmentId) return;
+    const latest = readVetAppointments().find(
+      (appointment) => appointment._id === confirmedAppointmentId,
+    );
+    if (latest) setConfirmedAppointment(latest);
+  }, [confirmedAppointmentId, storeVersion]);
+
+  const bookedSlots = getBookedVetSlots(form.serviceDate);
+  const availableSlots = isWeekendDate(form.serviceDate)
+    ? WEEKEND_TIME_SLOTS
+    : TIME_SLOTS;
+  const slotStats = availableSlots.reduce(
+    (stats, slot) => {
+      if (bookedSlots.includes(slot)) return { ...stats, booked: stats.booked + 1 };
+      if (isPastSlot(form.serviceDate, slot)) {
+        return { ...stats, unavailable: stats.unavailable + 1 };
+      }
+      return { ...stats, open: stats.open + 1 };
+    },
+    { open: 0, booked: 0, unavailable: 0 },
+  );
+
+  useEffect(() => {
+    if (!form.serviceTime) return;
+
+    const selectedSlotInvalid =
+      !availableSlots.includes(form.serviceTime) ||
+      bookedSlots.includes(form.serviceTime) ||
+      isPastSlot(form.serviceDate, form.serviceTime);
+
+    if (selectedSlotInvalid) {
+      setForm((prev) => ({ ...prev, serviceTime: "" }));
+    }
+  }, [availableSlots, bookedSlots, form.serviceDate, form.serviceTime]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -147,7 +223,24 @@ export default function VeterinaryPage() {
     >,
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const nextValue =
+      name === "serviceType" && value === "ONLINE_CONSULTATION"
+        ? {
+            serviceType: value,
+            serviceLocation: "ONLINE",
+            serviceAddress: "Online consultation",
+          }
+        : name === "serviceType" && value === "HOME_TO_HOME"
+          ? { serviceType: value, serviceLocation: "HOME" }
+          : name === "serviceType" && value
+            ? { serviceType: value, serviceLocation: "CLINIC" }
+            : { [name]: value };
+
+    setForm((prev) => ({
+      ...prev,
+      ...nextValue,
+      ...(name === "serviceDate" ? { serviceTime: "" } : {}),
+    }));
   };
 
   const handlePetType = (value: string) => {
@@ -155,13 +248,20 @@ export default function VeterinaryPage() {
   };
 
   const handleTimeSlot = (slot: string) => {
-    const booked = BOOKED_SLOTS[form.serviceDate] ?? [];
-    if (booked.includes(slot)) return;
+    if (bookedSlots.includes(slot)) return;
+    if (isPastSlot(form.serviceDate, slot)) return;
     setForm((prev) => ({ ...prev, serviceTime: slot }));
   };
 
   const isBooked = (slot: string): boolean => {
-    return (BOOKED_SLOTS[form.serviceDate] ?? []).includes(slot);
+    return bookedSlots.includes(slot);
+  };
+
+  const slotTitle = (slot: string): string => {
+    if (!form.serviceDate) return "Choose a service date first";
+    if (isPastSlot(form.serviceDate, slot)) return "This time has passed";
+    if (isBooked(slot)) return "Already booked";
+    return `Available at ${slot}`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -184,8 +284,7 @@ export default function VeterinaryPage() {
 
       setSubmitting(true);
 
-      const appointment: VetAppointment = {
-        _id: `vet_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      const appointment = await createVetAppointment({
         memberId: authMember._id,
         memberNick: authMember.memberNick,
         petName: form.petName,
@@ -197,12 +296,7 @@ export default function VeterinaryPage() {
         serviceTime: form.serviceTime,
         specialNote: form.specialNote,
         servicePrice: SERVICE_PRICES[form.serviceType] ?? 0,
-        status: "PAUSE",
-        createdAt: new Date().toISOString(),
-      };
-
-      const existing = readVetAppointments();
-      writeVetAppointments([appointment, ...existing]);
+      });
 
       setSubmitted(true);
       setConfirmedAppointment(appointment);
@@ -271,9 +365,11 @@ export default function VeterinaryPage() {
                   confirmation.
                 </p>
 
-                <div className="vet-done-badge">
+                <div
+                  className={`vet-done-badge ${confirmedAppointment.status.toLowerCase()}`}
+                >
                   <ScheduleIcon sx={{ fontSize: 14 }} />
-                  Awaiting admin confirmation
+                  {vetStatusText(confirmedAppointment.status)}
                 </div>
 
                 <div className="vet-done-summary">
@@ -332,7 +428,7 @@ export default function VeterinaryPage() {
                   <div className="vet-done-row total">
                     <span className="vet-done-key">Service Fee</span>
                     <span className="vet-done-val price">
-                      ${confirmedAppointment.servicePrice}
+                      ${vetDisplayPrice(confirmedAppointment)}
                     </span>
                   </div>
                 </div>
@@ -346,6 +442,12 @@ export default function VeterinaryPage() {
                     }}
                   >
                     Book Another Appointment
+                  </Button>
+                  <Button
+                    className="vet-done-btn secondary"
+                    onClick={() => navigate("/orders")}
+                  >
+                    View Status
                   </Button>
                 </div>
 
@@ -501,7 +603,7 @@ export default function VeterinaryPage() {
                         name="serviceDate"
                         value={form.serviceDate}
                         onChange={handleChange}
-                        min={new Date().toISOString().split("T")[0]}
+                        min={getTodayInputValue()}
                         required
                       />
                     </div>
@@ -513,9 +615,22 @@ export default function VeterinaryPage() {
                       <label className="vet-label">
                         Service Time <span className="vet-required">*</span>
                       </label>
+                      <div className="vet-slot-toolbar">
+                        <span className="vet-slot-summary">
+                          {form.serviceDate
+                            ? `${slotStats.open} open slots`
+                            : "Choose a date to see slots"}
+                        </span>
+                        <span className="vet-slot-legend open">Open</span>
+                        <span className="vet-slot-legend selected">
+                          Selected
+                        </span>
+                        <span className="vet-slot-legend booked">Busy</span>
+                      </div>
                       <div className="vet-time-slots">
-                        {TIME_SLOTS.map((slot) => {
+                        {availableSlots.map((slot) => {
                           const booked = isBooked(slot);
+                          const past = isPastSlot(form.serviceDate, slot);
                           const selected = form.serviceTime === slot;
                           return (
                             <button
@@ -523,19 +638,34 @@ export default function VeterinaryPage() {
                               type="button"
                               className={`vet-time-slot${
                                 booked ? " booked" : ""
+                              }${past ? " past" : ""
                               }${selected ? " active" : ""}`}
                               onClick={() => handleTimeSlot(slot)}
-                              disabled={booked}
-                              title={booked ? "Already booked" : slot}
+                              disabled={!form.serviceDate || booked || past}
+                              title={slotTitle(slot)}
                             >
-                              {slot}
+                              <span className="vet-slot-time">{slot}</span>
                               {booked && (
                                 <span className="vet-slot-tag">Busy</span>
+                              )}
+                              {past && !booked && (
+                                <span className="vet-slot-tag muted">Past</span>
+                              )}
+                              {selected && (
+                                <span className="vet-slot-tag selected">
+                                  Selected
+                                </span>
                               )}
                             </button>
                           );
                         })}
                       </div>
+                      {form.serviceDate && slotStats.open === 0 && (
+                        <p className="vet-slot-help">
+                          All slots are unavailable for this date. Please choose
+                          another date.
+                        </p>
+                      )}
                     </div>
                   </div>
 
