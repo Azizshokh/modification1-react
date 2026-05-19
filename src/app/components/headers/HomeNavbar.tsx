@@ -98,8 +98,8 @@ export function HomeNavbar({
           </Box>
 
           <Box component="li">
-            <NavLink to="/help" className={getNavLinkClassName}>
-              Help
+            <NavLink to="/veterinary" className={getNavLinkClassName}>
+              Veterinary
             </NavLink>
           </Box>
 
@@ -119,13 +119,11 @@ export function HomeNavbar({
             </Box>
           ) : null}
 
-          {authMember ? (
-            <Box component="li">
-              <NavLink to="/veterinary" className={getNavLinkClassName}>
-                Veterinary
-              </NavLink>
-            </Box>
-          ) : null}
+          <Box component="li">
+            <NavLink to="/help" className={getNavLinkClassName}>
+              Help
+            </NavLink>
+          </Box>
         </Stack>
 
         {/* ACTIONS */}

@@ -73,20 +73,19 @@ export function UserPage() {
                 }}
               >
                 <div className={"order-user-img"}>
-                  <div className={"avatar-ring"}>
-                    <img
-                      src={
-                        authMember?.memberImage
-                          ? `${serverApi}/${authMember.memberImage}`
-                          : "/icons/default-user.svg"
-                      }
-                      className={"order-user-avatar"}
-                      alt={authMember?.memberNick}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          "/icons/default-user.svg";
-                      }}
-                    />
+                  <div
+                    className={`avatar-ring${authMember.memberImage ? "" : " empty"}`}
+                  >
+                    {authMember.memberImage ? (
+                      <img
+                        src={`${serverApi}/${authMember.memberImage}`}
+                        className={"order-user-avatar"}
+                        alt={authMember.memberNick}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : null}
                   </div>
                 </div>
 

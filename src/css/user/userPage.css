@@ -162,6 +162,12 @@
   display: block;
 }
 
+.mb-image-empty {
+  background: rgba(255, 255, 255, 0.72);
+  border-style: dashed;
+  box-shadow: 0 0 0 4px var(--pf-primary-light);
+}
+
 .avatar-overlay {
   position: absolute;
   bottom: 0;
@@ -393,6 +399,12 @@
   background: linear-gradient(135deg, var(--pf-primary), var(--pf-accent));
   box-shadow: 0 4px 16px rgba(74,124,89,0.35);
   box-sizing: border-box;
+}
+
+.avatar-ring.empty {
+  background: var(--pf-card-bg);
+  border: 2px dashed rgba(240,122,42,0.45);
+  box-shadow: 0 4px 14px rgba(74,124,89,0.12);
 }
 
 .order-user-icon-box {

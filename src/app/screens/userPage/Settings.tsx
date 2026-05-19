@@ -25,7 +25,7 @@ export function Settings() {
   const [memberImage, setMemberImage] = useState<string>(
     authMember?.memberImage
       ? `${serverApi}/${authMember.memberImage}`
-      : "/icons/default-user.svg",
+      : "",
   );
 
   const [memberUpdateInput, setMemberUpdateInput] = useState<MemberUpdateInput>(
@@ -52,7 +52,7 @@ export function Settings() {
     setMemberImage(
       authMember.memberImage
         ? `${serverApi}/${authMember.memberImage}`
-        : "/icons/default-user.svg",
+        : "",
     );
   }, [
     authMember?._id,
@@ -129,15 +129,16 @@ export function Settings() {
       {/* ── Avatar Upload ── */}
       <Box className={"member-media-frame"}>
         <div className={"avatar-upload-wrap"}>
-          <img
-            src={memberImage}
-            className={"mb-image"}
-            alt={"Profile preview"}
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src =
-                "/icons/default-user.svg";
-            }}
-          />
+          {memberImage ? (
+            <img
+              src={memberImage}
+              className={"mb-image"}
+              alt={"Profile preview"}
+              onError={() => setMemberImage("")}
+            />
+          ) : (
+            <div className={"mb-image mb-image-empty"} />
+          )}
         </div>
 
         <div className={"media-change-box"}>

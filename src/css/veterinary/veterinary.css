@@ -308,6 +308,44 @@
   box-shadow: 0 0 0 3px rgba(74,124,89,0.13);
 }
 
+.vet-date-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.vet-date-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--vet-green);
+  font-size: 18px !important;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vet-date-input {
+  min-height: 46px;
+  padding-left: 42px;
+  cursor: text;
+  color-scheme: light;
+}
+
+.vet-date-input::-webkit-calendar-picker-indicator {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  background-color: rgba(74,124,89,0.12);
+  filter: invert(34%) sepia(14%) saturate(1145%) hue-rotate(82deg)
+    brightness(92%) contrast(87%);
+}
+
+.vet-date-input::-webkit-calendar-picker-indicator:hover {
+  background-color: rgba(74,124,89,0.22);
+}
+
 /* ── Select Wrapper ── */
 .vet-select-wrap {
   position: relative;

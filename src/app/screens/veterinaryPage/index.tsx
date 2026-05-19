@@ -122,7 +122,23 @@ function vetStatusText(status: VetAppointment["status"]): string {
 }
 
 function vetDisplayPrice(appointment: VetAppointment): number {
-  return appointment.status === "COMPLETED" ? 0 : appointment.originalServicePrice;
+  if (appointment.status === "COMPLETED") return 0;
+
+  return (
+    appointment.originalServicePrice ||
+    appointment.servicePrice ||
+    SERVICE_PRICES[appointment.serviceType] ||
+    0
+  );
+}
+
+function formatVetDateTime(appointment: VetAppointment): string {
+  const date = String(appointment.serviceDate ?? "").trim();
+  const time = String(appointment.serviceTime ?? "").trim();
+  const displayDate = date && !/^0+$/.test(date) ? date : "";
+  const displayTime = time && !/^0+$/.test(time) ? time : "";
+
+  return [displayDate, displayTime].filter(Boolean).join(" · ");
 }
 
 function getTodayInputValue(): string {
@@ -410,8 +426,8 @@ export default function VeterinaryPage() {
                       Date &amp; Time
                     </span>
                     <span className="vet-done-val">
-                      {confirmedAppointment.serviceDate} ·{" "}
-                      {confirmedAppointment.serviceTime}
+                      {formatVetDateTime(confirmedAppointment) ||
+                        "Schedule pending"}
                     </span>
                   </div>
                   {confirmedAppointment.specialNote && (
@@ -597,15 +613,18 @@ export default function VeterinaryPage() {
                       <label className="vet-label">
                         Service Date <span className="vet-required">*</span>
                       </label>
-                      <input
-                        className="vet-input"
-                        type="date"
-                        name="serviceDate"
-                        value={form.serviceDate}
-                        onChange={handleChange}
-                        min={getTodayInputValue()}
-                        required
-                      />
+                      <div className="vet-date-wrap">
+                        <CalendarMonthIcon className="vet-date-icon" />
+                        <input
+                          className="vet-input vet-date-input"
+                          type="date"
+                          name="serviceDate"
+                          value={form.serviceDate}
+                          onChange={handleChange}
+                          min={getTodayInputValue()}
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
 

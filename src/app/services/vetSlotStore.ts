@@ -50,6 +50,12 @@ const VET_API_BASE = "http://localhost:4001/admin/pet-service";
 const VET_PUBLIC_API_BASE = "http://localhost:4001/pet-service";
 const VET_CREATE_URL = "http://localhost:4001/admin/pet-service/create";
 const VET_STATUS_REFRESH_MS = 2000;
+const SERVICE_PRICES: Record<string, number> = {
+  HOME_TO_HOME: 40,
+  CLINIC_TO_CLINIC: 25,
+  ONLINE_CONSULTATION: 15,
+  GROOMING: 30,
+};
 
 let channel: BroadcastChannel | null = null;
 
@@ -63,6 +69,61 @@ function dateKey(input: string | Date): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value.slice(0, 10);
   return date.toISOString().split("T")[0];
+}
+
+function normalizeServiceDate(input: any, fallback?: string): string {
+  const value = String(input ?? "").trim();
+  const fallbackValue = String(fallback ?? "").trim();
+
+  if (!value || /^0+$/.test(value)) return fallbackValue;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  if (/^\d{8}$/.test(value)) {
+    return `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}`;
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value.slice(0, 10);
+
+  return date.toISOString().split("T")[0];
+}
+
+function normalizeServiceTime(input: any, fallback?: string): string {
+  const value = String(input ?? "").trim();
+  const fallbackValue = String(fallback ?? "").trim();
+
+  if (!value || /^0+$/.test(value)) return fallbackValue;
+  if (/^\d{1,2}:\d{2}$/.test(value)) {
+    const [hours, minutes] = value.split(":");
+    return `${hours.padStart(2, "0")}:${minutes}`;
+  }
+  if (/^\d{3,4}$/.test(value)) {
+    const padded = value.padStart(4, "0");
+    return `${padded.slice(0, 2)}:${padded.slice(2, 4)}`;
+  }
+
+  const date = new Date(value);
+  if (!Number.isNaN(date.getTime())) {
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes(),
+    ).padStart(2, "0")}`;
+  }
+
+  return value;
+}
+
+function normalizeServiceType(input: any, fallback?: string): string {
+  return String(input ?? fallback ?? "").trim().toUpperCase();
+}
+
+function servicePriceForType(serviceType: string): number {
+  return SERVICE_PRICES[serviceType] ?? 0;
+}
+
+function normalizePrice(input: any, fallback?: number): number {
+  const value = Number(input);
+  if (Number.isFinite(value) && value > 0) return value;
+
+  return Number(fallback ?? 0);
 }
 
 function getChannel(): BroadcastChannel | null {
@@ -139,6 +200,20 @@ function normalizeAppointment(
     input.memberData?.id ??
     fallback?.memberId;
   if (!id || !memberId) return null;
+  const serviceType = normalizeServiceType(
+    input.serviceType ?? input.petServiceType,
+    fallback?.serviceType,
+  );
+  const defaultPrice = servicePriceForType(serviceType);
+  const originalServicePrice = normalizePrice(
+    input.originalServicePrice ??
+      input.servicePrice ??
+      input.petServicePrice ??
+      input.petServiceFee ??
+      input.price,
+    fallback?.originalServicePrice || fallback?.servicePrice || defaultPrice,
+  );
+  const status = normalizeStatus(input);
 
   return {
     _id: String(id),
@@ -152,9 +227,7 @@ function normalizeAppointment(
     ),
     petName: String(input.petName ?? input.pet?.name ?? fallback?.petName ?? ""),
     petType: String(input.petType ?? input.pet?.type ?? fallback?.petType ?? ""),
-    serviceType: String(
-      input.serviceType ?? input.petServiceType ?? fallback?.serviceType ?? "",
-    ),
+    serviceType,
     serviceLocation: String(
       input.serviceLocation ??
         input.petServiceLocation ??
@@ -164,28 +237,21 @@ function normalizeAppointment(
     serviceAddress: String(
       input.serviceAddress ?? input.petServiceAddress ?? fallback?.serviceAddress ?? "",
     ),
-    serviceDate: String(
-      input.serviceDate ?? input.petServiceDate ?? fallback?.serviceDate ?? "",
+    serviceDate: normalizeServiceDate(
+      input.serviceDate ?? input.petServiceDate,
+      fallback?.serviceDate,
     ),
-    serviceTime: String(
-      input.serviceTime ?? input.petServiceTime ?? fallback?.serviceTime ?? "",
+    serviceTime: normalizeServiceTime(
+      input.serviceTime ?? input.petServiceTime,
+      fallback?.serviceTime,
     ),
     specialNote: String(
       input.specialNote ?? input.petServiceNote ?? fallback?.specialNote ?? "",
     ),
-    servicePrice: Number(
-      input.servicePrice ?? input.petServicePrice ?? fallback?.servicePrice ?? 0,
-    ),
-    originalServicePrice: Number(
-      input.originalServicePrice ??
-        input.servicePrice ??
-        input.petServicePrice ??
-        fallback?.originalServicePrice ??
-        fallback?.servicePrice ??
-        0,
-    ),
-    status: normalizeStatus(input),
-    serviceStatus: normalizeStatus(input),
+    servicePrice: status === "COMPLETED" ? 0 : originalServicePrice,
+    originalServicePrice,
+    status,
+    serviceStatus: status,
     createdAt: String(input.createdAt ?? fallback?.createdAt ?? new Date().toISOString()),
     updatedAt: String(
       input.updatedAt ??

@@ -46,6 +46,12 @@ import PetsIcon from "@mui/icons-material/Pets";
 import "../../../css/orders/orders.css";
 
 const PAGE_LIMIT = 50;
+const SERVICE_PRICES: Record<string, number> = {
+  HOME_TO_HOME: 40,
+  CLINIC_TO_CLINIC: 25,
+  ONLINE_CONSULTATION: 15,
+  GROOMING: 30,
+};
 type OrderTabStatus =
   | OrderStatus.PAUSE
   | OrderStatus.PROCESS
@@ -162,7 +168,23 @@ function vetStatusIcon(status: VetAppointment["status"]): React.ReactNode {
 }
 
 function vetDisplayPrice(appointment: VetAppointment): number {
-  return appointment.status === "COMPLETED" ? 0 : appointment.originalServicePrice;
+  if (appointment.status === "COMPLETED") return 0;
+
+  return (
+    appointment.originalServicePrice ||
+    appointment.servicePrice ||
+    SERVICE_PRICES[appointment.serviceType] ||
+    0
+  );
+}
+
+function formatVetDateTime(appointment: VetAppointment): string {
+  const date = String(appointment.serviceDate ?? "").trim();
+  const time = String(appointment.serviceTime ?? "").trim();
+  const displayDate = date && !/^0+$/.test(date) ? date : "";
+  const displayTime = time && !/^0+$/.test(time) ? time : "";
+
+  return [displayDate, displayTime].filter(Boolean).join(" · ");
 }
 
 function getProductData(order: Order): Product[] {
@@ -691,14 +713,12 @@ export function OrdersPage(): React.JSX.Element {
                           </span>
                           <span className="op-meta-item">
                             <CalendarTodayIcon sx={{ fontSize: 12 }} />
-                            {a.serviceDate} · {a.serviceTime}
+                            {formatVetDateTime(a) || "Schedule pending"}
                           </span>
                         </div>
 
                         {a.serviceAddress && (
-                          <p className="op-vet-address">
-                            📍 {a.serviceAddress}
-                          </p>
+                          <p className="op-vet-address">{a.serviceAddress}</p>
                         )}
                         {a.specialNote && (
                           <p className="op-vet-note">Note: {a.specialNote}</p>
