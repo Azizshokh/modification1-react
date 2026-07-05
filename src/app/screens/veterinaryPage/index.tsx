@@ -27,9 +27,6 @@ import { Messages } from "../../../lib/config";
 import {
   createVetAppointment,
   getBookedVetSlots,
-  readVetAppointments,
-  startVetAppointmentStatusSync,
-  subscribeVetAppointments,
 } from "../../services/vetSlotStore";
 import type { VetAppointment } from "../../services/vetSlotStore";
 import "../../../css/veterinary/veterinary.css";
@@ -174,36 +171,9 @@ export default function VeterinaryPage() {
   const [submitting, setSubmitting] = useState(false);
   const [confirmedAppointment, setConfirmedAppointment] =
     useState<VetAppointment | null>(null);
-  const [storeVersion, setStoreVersion] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
   const { authMember, setOrderBuilder } = useGlobals();
-
-  useEffect(() => {
-    return subscribeVetAppointments(() => {
-      setStoreVersion((version) => version + 1);
-      setOrderBuilder(new Date());
-    });
-  }, [setOrderBuilder]);
-
-  useEffect(() => {
-    if (!authMember) return;
-
-    return startVetAppointmentStatusSync(authMember._id, () => {
-      setStoreVersion((version) => version + 1);
-      setOrderBuilder(new Date());
-    });
-  }, [authMember, setOrderBuilder]);
-
-  const confirmedAppointmentId = confirmedAppointment?._id;
-
-  useEffect(() => {
-    if (!confirmedAppointmentId) return;
-    const latest = readVetAppointments().find(
-      (appointment) => appointment._id === confirmedAppointmentId,
-    );
-    if (latest) setConfirmedAppointment(latest);
-  }, [confirmedAppointmentId, storeVersion]);
 
   const bookedSlots = getBookedVetSlots(form.serviceDate);
   const availableSlots = isWeekendDate(form.serviceDate)

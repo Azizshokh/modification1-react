@@ -1,4 +1,5 @@
 import axios from "axios";
+import { serverApi } from "../../lib/config";
 
 export type VetAppointmentStatus =
   | "PAUSE"
@@ -44,20 +45,14 @@ export interface VetAppointmentInput {
 }
 
 const VET_STORAGE_KEY = "vetAppointments";
-const VET_STORE_EVENT = "vetAppointments:changed";
-const VET_STORE_CHANNEL = "vet-appointments";
-const VET_API_BASE = "http://localhost:4001/admin/pet-service";
-const VET_PUBLIC_API_BASE = "http://localhost:4001/pet-service";
-const VET_CREATE_URL = "http://localhost:4001/admin/pet-service/create";
-const VET_STATUS_REFRESH_MS = 2000;
+const VET_PUBLIC_API_BASE = `${serverApi}/pet-service`;
+const VET_CREATE_URL = `${VET_PUBLIC_API_BASE}/create`;
 const SERVICE_PRICES: Record<string, number> = {
   HOME_TO_HOME: 40,
   CLINIC_TO_CLINIC: 25,
   ONLINE_CONSULTATION: 15,
   GROOMING: 30,
 };
-
-let channel: BroadcastChannel | null = null;
 
 function dateKey(input: string | Date): string {
   if (!input) return "";
@@ -126,19 +121,10 @@ function normalizePrice(input: any, fallback?: number): number {
   return Number(fallback ?? 0);
 }
 
-function getChannel(): BroadcastChannel | null {
-  if (typeof window === "undefined" || !("BroadcastChannel" in window)) {
-    return null;
-  }
-
-  if (!channel) channel = new BroadcastChannel(VET_STORE_CHANNEL);
-  return channel;
-}
-
 function normalizeStatus(input: any): VetAppointmentStatus {
   const rawStatus = String(
-    input?.status ??
-      input?.serviceStatus ??
+    input?.serviceStatus ??
+      input?.status ??
       input?.petServiceStatus ??
       input?.appointmentStatus ??
       input?.process ??
@@ -296,40 +282,6 @@ function extractAppointmentList(input: any): any[] {
   return Array.isArray(source) ? source : [];
 }
 
-async function fetchVetAppointmentById(
-  appointment: VetAppointment,
-): Promise<VetAppointment | null> {
-  const endpoints = [
-    `${VET_PUBLIC_API_BASE}/${appointment._id}`,
-    `${VET_PUBLIC_API_BASE}/detail/${appointment._id}`,
-    `${VET_PUBLIC_API_BASE}/get/${appointment._id}`,
-    `${VET_API_BASE}/${appointment._id}`,
-    `${VET_API_BASE}/detail/${appointment._id}`,
-    `${VET_API_BASE}/get/${appointment._id}`,
-  ];
-
-  for (const url of endpoints) {
-    try {
-      const result = await axios.get(url, { withCredentials: true });
-      const normalized = normalizeAppointment(
-        extractAppointmentResponse(result.data),
-        appointment,
-      );
-      if (normalized) return normalized;
-    } catch {
-      // Try the next common detail endpoint.
-    }
-  }
-
-  return null;
-}
-
-function notifyVetAppointmentsChanged(): void {
-  if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(VET_STORE_EVENT));
-  getChannel()?.postMessage({ type: VET_STORE_EVENT, at: Date.now() });
-}
-
 export function readVetAppointments(): VetAppointment[] {
   try {
     const raw = localStorage.getItem(VET_STORAGE_KEY);
@@ -347,7 +299,6 @@ export function readVetAppointments(): VetAppointment[] {
 
 export function writeVetAppointments(list: VetAppointment[]): void {
   localStorage.setItem(VET_STORAGE_KEY, JSON.stringify(list));
-  notifyVetAppointmentsChanged();
 }
 
 function buildCreatePayload(input: VetAppointmentInput) {
@@ -388,18 +339,19 @@ export async function createVetAppointment(
   const serverAppointment = normalizeAppointment(
     extractAppointmentResponse(result.data),
   );
+  if (!serverAppointment) {
+    throw new Error("The server returned an invalid veterinary appointment.");
+  }
   const appointment: VetAppointment = {
     ...input,
-    ...(serverAppointment ?? {}),
-    _id:
-      serverAppointment?._id ??
-      `vet_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    status: serverAppointment?.status ?? "PAUSE",
-    serviceStatus: serverAppointment?.serviceStatus ?? "PAUSE",
+    ...serverAppointment,
+    _id: serverAppointment._id,
+    status: serverAppointment.status,
+    serviceStatus: serverAppointment.serviceStatus,
     servicePrice: input.servicePrice,
     originalServicePrice: input.servicePrice,
-    createdAt: serverAppointment?.createdAt ?? now,
-    updatedAt: serverAppointment?.updatedAt ?? now,
+    createdAt: serverAppointment.createdAt ?? now,
+    updatedAt: serverAppointment.updatedAt ?? now,
   };
 
   writeVetAppointments([appointment, ...existing]);
@@ -410,110 +362,36 @@ export async function syncVetAppointmentsFromAdmin(
   memberId: string,
 ): Promise<VetAppointment[]> {
   const localAppointments = readVetAppointments();
-  const localMine = localAppointments.filter(
-    (appointment) => appointment.memberId === memberId,
+  const localMineById = new Map(
+    localAppointments
+      .filter((appointment) => appointment.memberId === memberId)
+      .map((appointment) => [appointment._id, appointment]),
   );
 
-  let serverAppointments: VetAppointment[] = [];
-  const listUrls = [
-    `${VET_PUBLIC_API_BASE}/all`,
-    `${VET_PUBLIC_API_BASE}`,
-    `${VET_PUBLIC_API_BASE}/my`,
-    `${VET_API_BASE}/all`,
-    VET_API_BASE,
-  ];
-
-  for (const url of listUrls) {
-    try {
-      const result = await axios.get(url, {
-        params: { memberId },
-        withCredentials: true,
-      });
-      const localById = new Map(
-        localMine.map((appointment) => [appointment._id, appointment]),
+  const result = await axios.get(`${VET_PUBLIC_API_BASE}/my`, {
+    withCredentials: true,
+  });
+  const serverAppointments = extractAppointmentList(result.data)
+    .map((appointment) => {
+      const appointmentId = appointment?._id ?? appointment?.id;
+      return normalizeAppointment(
+        appointment,
+        appointmentId ? localMineById.get(String(appointmentId)) : undefined,
       );
+    })
+    .filter((appointment): appointment is VetAppointment => Boolean(appointment))
+    .filter((appointment) => appointment.memberId === memberId);
 
-      serverAppointments = extractAppointmentList(result.data)
-        .map((appointment) => {
-          const appointmentId =
-            appointment?._id ??
-            appointment?.id ??
-            appointment?.petServiceId ??
-            appointment?.appointmentId;
-          return normalizeAppointment(
-            appointment,
-            appointmentId ? localById.get(String(appointmentId)) : undefined,
-          );
-        })
-        .filter((appointment): appointment is VetAppointment => Boolean(appointment))
-        .filter((appointment) => appointment.memberId === memberId);
-
-      if (serverAppointments.length > 0) break;
-    } catch {
-      serverAppointments = [];
-    }
-  }
-
-  const serverById = new Map(
-    serverAppointments.map((appointment) => [appointment._id, appointment]),
-  );
-  const missingLocalMatches = localMine.filter(
-    (appointment) => !serverById.has(appointment._id),
-  );
-
-  const detailAppointments = (
-    await Promise.all(missingLocalMatches.map(fetchVetAppointmentById))
-  ).filter((appointment): appointment is VetAppointment => Boolean(appointment));
-  const syncedAppointments = [...serverAppointments, ...detailAppointments];
-
-  if (syncedAppointments.length === 0) {
-    return localMine;
-  }
-
-  const syncedById = new Map(
-    syncedAppointments.map((appointment) => [appointment._id, appointment]),
-  );
   const merged = [
-    ...localAppointments
-      .filter((appointment) => appointment.memberId !== memberId)
-      .filter((appointment) => !syncedById.has(appointment._id)),
-    ...syncedAppointments,
-    ...localAppointments.filter(
-      (appointment) =>
-        appointment.memberId === memberId && !syncedById.has(appointment._id),
-    ),
+    ...localAppointments.filter((appointment) => appointment.memberId !== memberId),
+    ...serverAppointments,
   ];
 
   if (JSON.stringify(merged) !== JSON.stringify(localAppointments)) {
     writeVetAppointments(merged);
   }
 
-  return syncedAppointments;
-}
-
-export function startVetAppointmentStatusSync(
-  memberId: string,
-  onSynced?: () => void,
-  intervalMs: number = VET_STATUS_REFRESH_MS,
-): () => void {
-  let stopped = false;
-
-  const sync = async () => {
-    try {
-      await syncVetAppointmentsFromAdmin(memberId);
-      if (!stopped) onSynced?.();
-    } catch (err) {
-      console.info("[vet] status sync skipped:", err);
-    }
-  };
-
-  sync().then();
-  const interval = window.setInterval(sync, intervalMs);
-
-  return () => {
-    stopped = true;
-    window.clearInterval(interval);
-  };
+  return serverAppointments;
 }
 
 export function updateVetAppointmentStatus(
@@ -539,7 +417,17 @@ export function updateVetAppointmentStatus(
   return updatedAppointment;
 }
 
-export function deleteVetAppointment(appointmentId: string): void {
+export async function deleteVetAppointment(appointmentId: string): Promise<void> {
+  const appointment = readVetAppointments().find(
+    (item) => item._id === appointmentId,
+  );
+  if (!appointment) return;
+
+  await axios.post(
+    `${VET_PUBLIC_API_BASE}/cancel/${appointmentId}`,
+    { memberId: appointment.memberId },
+    { withCredentials: true },
+  );
   writeVetAppointments(
     readVetAppointments().filter((appointment) => appointment._id !== appointmentId),
   );
@@ -557,27 +445,4 @@ export function getBookedVetSlots(serviceDate: string): string[] {
         dateKey(appointment.serviceDate) === selectedDate,
     )
     .map((appointment) => appointment.serviceTime);
-}
-
-export function subscribeVetAppointments(
-  callback: () => void,
-): () => void {
-  if (typeof window === "undefined") return () => undefined;
-
-  const onStorage = (event: StorageEvent) => {
-    if (event.key === VET_STORAGE_KEY) callback();
-  };
-  const onLocalChange = () => callback();
-  const broadcast = getChannel();
-  const onMessage = () => callback();
-
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(VET_STORE_EVENT, onLocalChange);
-  broadcast?.addEventListener("message", onMessage);
-
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(VET_STORE_EVENT, onLocalChange);
-    broadcast?.removeEventListener("message", onMessage);
-  };
 }

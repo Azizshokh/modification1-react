@@ -42,7 +42,7 @@ export default function HomeScreen(): React.JSX.Element {
         setPopularProducts(data);
       })
       .catch((err) => {
-        console.log("Error fetching popular products: ", err);
+        console.error("Error fetching popular products:", err);
       });
 
     product
@@ -55,7 +55,7 @@ export default function HomeScreen(): React.JSX.Element {
         setNewProducts(data);
       })
       .catch((err) => {
-        console.log("Error fetching new products: ", err);
+        console.error("Error fetching new products:", err);
       });
 
     const memberService = new MemberService();
@@ -65,7 +65,7 @@ export default function HomeScreen(): React.JSX.Element {
         setTopUsers(data);
       })
       .catch((err) => {
-        console.log("Error fetching top users: ", err);
+        console.error("Error fetching top users:", err);
       });
 
     // Slice: Data => Store

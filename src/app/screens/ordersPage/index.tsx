@@ -36,8 +36,6 @@ import {
 import {
   deleteVetAppointment,
   readVetAppointments,
-  startVetAppointmentStatusSync,
-  subscribeVetAppointments,
   syncVetAppointmentsFromAdmin,
   VetAppointment,
 } from "../../services/vetSlotStore";
@@ -344,21 +342,15 @@ export function OrdersPage(): React.JSX.Element {
 
   useEffect(() => {
     loadOrders().then();
-    refreshVetAppointments();
+    if (!authMember) {
+      refreshVetAppointments();
+      return;
+    }
+
+    syncVetAppointmentsFromAdmin(authMember._id)
+      .then(refreshVetAppointments)
+      .catch(sweetErrorHandling);
   }, [authMember, loadOrders, orderBuilder, refreshVetAppointments]);
-
-  useEffect(() => {
-    return subscribeVetAppointments(refreshVetAppointments);
-  }, [refreshVetAppointments]);
-
-  useEffect(() => {
-    if (!authMember) return;
-
-    return startVetAppointmentStatusSync(
-      authMember._id,
-      refreshVetAppointments,
-    );
-  }, [authMember, refreshVetAppointments]);
 
   const cancelVetAppointment = async (appointmentId: string) => {
     const confirmed = window.confirm(
@@ -366,7 +358,7 @@ export function OrdersPage(): React.JSX.Element {
     );
     if (!confirmed) return;
     try {
-      deleteVetAppointment(appointmentId);
+      await deleteVetAppointment(appointmentId);
       refreshVetAppointments();
       await sweetTopSmallSuccessAlert("Appointment cancelled");
     } catch (err) {
@@ -662,7 +654,7 @@ export function OrdersPage(): React.JSX.Element {
                 </Typography>
                 <Typography className="op-section-sub">
                   {activeVetAppointments.length > 0
-                    ? `${activeVetAppointments.length} appointment${activeVetAppointments.length === 1 ? "" : "s"} with realtime admin status`
+                    ? `${activeVetAppointments.length} appointment${activeVetAppointments.length === 1 ? "" : "s"}; refresh to check admin status`
                     : "No vet appointments"}
                 </Typography>
               </div>

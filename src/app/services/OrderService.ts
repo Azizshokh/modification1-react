@@ -26,11 +26,9 @@ class OrderService {
 
             const url = `${this.path}/order/create`;
             const result = await axios.post(url, orderItem, { withCredentials: true });
-            console.log("createOrder: ", result);
 
             return result.data;
         } catch (err) {
-            console.log("Error, createOrder: ", err);
             throw err;
         }
     }
@@ -50,10 +48,8 @@ class OrderService {
 
             if (result.status === 404) return [];
 
-            console.log("getMyOrders: ", result);
             return result.data;
         } catch (err) {
-            console.log("Error, getMyOrders: ", err);
             throw err;
         }
     }
@@ -62,11 +58,9 @@ class OrderService {
         try {
             const url = `${this.path}/order/update`;
             const result = await axios.post(url, input, { withCredentials: true });
-            console.log("updateOrder: ", result);
 
             return result.data;
         } catch (err) {
-            console.log("Error, updateOrder: ", err);
             throw err;
         }
     }

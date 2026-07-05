@@ -26,7 +26,6 @@ export const sweetErrorHandling = async (err: any) => {
     if (axios.isAxiosError(err)) {
         const status = err.response?.status;
         if (status === 401 || status === 403) {
-            console.info("[sweetAlert] auth error suppressed:", status);
             return;
         }
     }

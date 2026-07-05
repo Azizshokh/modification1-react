@@ -13,10 +13,8 @@ class MemberService {
         try {
             const url = this.path + "/member/top-users";
             const result = await axios.get(url);
-            console.log("getTopUsers: ", result);
             return result.data;
         } catch (err) {
-            console.log("Error, getTopUsers: ", err);
             throw err;
         }
     }
@@ -25,11 +23,9 @@ class MemberService {
         try {
             const url = this.path + "/member/restaurant";
             const result = await axios.get(url);
-            console.log("getRestaurant: ", result);
             const restaurant: Member = result.data;
             return restaurant;
         } catch (err) {
-            console.log("Error, getRestaurant: ", err);
             throw err;
         }
     }
@@ -38,15 +34,12 @@ class MemberService {
         try {
             const url = this.path + "/member/signup";
             const result = await axios.post(url, input, { withCredentials: true });
-            console.log("signup:", result);
 
             const member: Member = result.data.member;
-            console.log("member:", member);
             localStorage.setItem("memberData", JSON.stringify(member));
 
             return member;
         } catch (err) {
-            console.log("Error, signup: ", err);
             throw err;
         }
     }
@@ -55,15 +48,12 @@ class MemberService {
         try {
             const url = this.path + "/member/login";
             const result = await axios.post(url, input, { withCredentials: true });
-            console.log("login:", result);
 
             const member: Member = result.data.member;
-            console.log("member:", member);
             localStorage.setItem("memberData", JSON.stringify(member));
 
             return member;
         } catch (err) {
-            console.log("Error, login: ", err);
             throw err;
         }
     }
@@ -76,13 +66,10 @@ class MemberService {
         }
         try {
             const url = this.path + "/member/logout";
-            const result = await axios.post(url, {}, { withCredentials: true });
-            console.log("logout:", result);
+            await axios.post(url, {}, { withCredentials: true });
         } catch (err) {
             // A 401 here just means the session already expired server-side.
-            if (axios.isAxiosError(err) && err.response?.status === 401) {
-                console.info("[logout] session already expired");
-            } else {
+            if (!(axios.isAxiosError(err) && err.response?.status === 401)) {
                 console.warn("Error, logout: ", err);
             }
         } finally {
@@ -108,13 +95,10 @@ class MemberService {
                 },
             });
 
-            console.log("updateMember:", result);
-
             const member: Member = result.data;
             localStorage.setItem("memberData", JSON.stringify(member));
             return member;
         } catch (err) {
-            console.log("Error, updateMember: ", err);
             throw err;
         }
     }
