@@ -21,6 +21,9 @@ const popularProductsRetriever = createSelector(
 // ─── Main section ─────────────────────────────────────────────────
 export default function PopularProducts(): React.JSX.Element {
   const { popularProducts } = useSelector(popularProductsRetriever);
+  const safePopularProducts = Array.isArray(popularProducts)
+    ? popularProducts
+    : [];
 
   return (
     <div className="popular-products-frame">
@@ -32,8 +35,8 @@ export default function PopularProducts(): React.JSX.Element {
             <PetsIcon className="category-title__pets-icon" />
           </Box>
           <Stack className="cards-frame">
-            {popularProducts.length !== 0 ? (
-              popularProducts.map((ele: Product) => (
+            {safePopularProducts.length !== 0 ? (
+              safePopularProducts.map((ele: Product) => (
                 <ProductCard key={ele._id} product={ele} />
               ))
             ) : (

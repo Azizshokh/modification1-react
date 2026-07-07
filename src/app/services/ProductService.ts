@@ -11,7 +11,10 @@ class ProductService {
 
     public async getProducts(input: ProductInquiry): Promise<Product[]> {
         try {
-            let url = `${this.path}/product/all?order=${input.order}&page=${input.page}&limit=${input.limit}`;
+            const page = input.page ?? 1;
+            const limit = input.limit ?? 8;
+            const order = input.order ?? "createdAt";
+            let url = `${this.path}/product/all?page=${page}&limit=${limit}&order=${order}`;
             if (input.productCollection)
                 url += `&productCollection=${input.productCollection}`;
             if (input.search)
@@ -19,10 +22,28 @@ class ProductService {
 
             const result = await axios.get(url);
 
-            return result.data;
+            return this.normalizeProducts(result.data);
         } catch (err) {
             throw err;
         }
+    }
+
+    private normalizeProducts(data: unknown): Product[] {
+        if (Array.isArray(data)) return data;
+
+        if (data && typeof data === "object") {
+            const response = data as {
+                data?: unknown;
+                products?: unknown;
+                list?: unknown;
+            };
+
+            if (Array.isArray(response.data)) return response.data;
+            if (Array.isArray(response.products)) return response.products;
+            if (Array.isArray(response.list)) return response.list;
+        }
+
+        return [];
     }
 
     public async getProduct(productId: string): Promise<Product> {
