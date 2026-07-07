@@ -17,6 +17,7 @@ const topUsersRetriever = createSelector(retrieveTopUsers, (topUsers) => ({
 
 export default function ActiveUsers(): React.JSX.Element {
   const { topUsers } = useSelector(topUsersRetriever);
+  const safeTopUsers = Array.isArray(topUsers) ? topUsers : [];
 
   return (
     <div className="active-users-frame">
@@ -31,8 +32,8 @@ export default function ActiveUsers(): React.JSX.Element {
 
           {/* ── Cards grid ── */}
           <Stack className="active-users__cards">
-            {topUsers.length !== 0 ? (
-              topUsers.map((member: Member) => (
+            {safeTopUsers.length !== 0 ? (
+              safeTopUsers.map((member: Member) => (
                 <UserCard key={member._id} member={member} />
               ))
             ) : (

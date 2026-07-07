@@ -48,10 +48,38 @@ class OrderService {
 
             if (result.status === 404) return [];
 
-            return result.data;
+            return this.normalizeOrders(result.data);
         } catch (err) {
             throw err;
         }
+    }
+
+    private normalizeOrders(data: unknown): Order[] {
+        if (Array.isArray(data)) return data;
+
+        if (data && typeof data === "object") {
+            const response = data as {
+                data?: unknown;
+                orders?: unknown;
+                list?: unknown;
+            };
+
+            if (Array.isArray(response.data)) return response.data;
+            if (Array.isArray(response.orders)) return response.orders;
+            if (Array.isArray(response.list)) return response.list;
+
+            if (response.data && typeof response.data === "object") {
+                const nested = response.data as {
+                    orders?: unknown;
+                    list?: unknown;
+                };
+
+                if (Array.isArray(nested.orders)) return nested.orders;
+                if (Array.isArray(nested.list)) return nested.list;
+            }
+        }
+
+        return [];
     }
 
     public async updateOrder(input: OrderUpdateInput): Promise<Order> {

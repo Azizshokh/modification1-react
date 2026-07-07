@@ -75,12 +75,15 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
 
   const handleCart = () => {
     if (!chosenProduct) return;
+    const productImages = Array.isArray(chosenProduct.productImages)
+      ? chosenProduct.productImages
+      : [];
     onAdd({
       _id: chosenProduct._id,
       quantity: 1,
       name: chosenProduct.productName,
       price: chosenProduct.productPrice,
-      image: chosenProduct.productImages[0],
+      image: productImages[0] ?? "",
     });
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 1400);
@@ -94,6 +97,9 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
 
   if (!chosenProduct) return null;
 
+  const productImages = Array.isArray(chosenProduct.productImages)
+    ? chosenProduct.productImages
+    : [];
   const weightLabel =
     chosenProduct.productCollection === ProductCollection.GADGETS
       ? chosenProduct.productSize
@@ -124,7 +130,7 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
           {/* Main image */}
           <Box className="main-image-wrapper">
             <img
-              src={`${serverApi}/${chosenProduct.productImages[activeImage]}`}
+              src={`${serverApi}/${productImages[activeImage] ?? ""}`}
               alt={chosenProduct.productName}
               className="main-image"
             />
@@ -132,7 +138,7 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
 
           {/* Thumbnails */}
           <Box className="thumbnails">
-            {chosenProduct.productImages.map((img, i) => (
+            {productImages.map((img, i) => (
               <Box
                 key={i}
                 className={`thumb-wrapper ${activeImage === i ? "thumb-active" : ""}`}

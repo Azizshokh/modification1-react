@@ -59,7 +59,10 @@ function ProductCard({ product }: { product: Product }) {
   const [imgError, setImgError] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
 
-  const imagePath = `${serverApi}/${product.productImages[0]}`;
+  const productImages = Array.isArray(product.productImages)
+    ? product.productImages
+    : [];
+  const imagePath = `${serverApi}/${productImages[0] ?? ""}`;
 
   return (
     <Box className="pop-card">

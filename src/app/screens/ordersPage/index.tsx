@@ -243,6 +243,18 @@ export function OrdersPage(): React.JSX.Element {
   );
   const { pausedOrders, processOrders, finishedOrders } =
     useSelector(ordersRetriever);
+  const safePausedOrders = useMemo(
+    () => (Array.isArray(pausedOrders) ? pausedOrders : []),
+    [pausedOrders],
+  );
+  const safeProcessOrders = useMemo(
+    () => (Array.isArray(processOrders) ? processOrders : []),
+    [processOrders],
+  );
+  const safeFinishedOrders = useMemo(
+    () => (Array.isArray(finishedOrders) ? finishedOrders : []),
+    [finishedOrders],
+  );
 
   const [orderTab, setOrderTab] = useState<OrderTabStatus>(OrderStatus.PAUSE);
   const [loading, setLoading] = useState<boolean>(false);
@@ -265,16 +277,16 @@ export function OrdersPage(): React.JSX.Element {
 
   const ordersByStatus = useMemo<Record<OrderTabStatus, Order[]>>(
     () => ({
-      [OrderStatus.PAUSE]: pausedOrders,
-      [OrderStatus.PROCESS]: processOrders,
-      [OrderStatus.FINISH]: finishedOrders,
+      [OrderStatus.PAUSE]: safePausedOrders,
+      [OrderStatus.PROCESS]: safeProcessOrders,
+      [OrderStatus.FINISH]: safeFinishedOrders,
     }),
-    [finishedOrders, pausedOrders, processOrders],
+    [safeFinishedOrders, safePausedOrders, safeProcessOrders],
   );
 
   const activeOrders = ordersByStatus[orderTab];
   const totalOrders =
-    pausedOrders.length + processOrders.length + finishedOrders.length;
+    safePausedOrders.length + safeProcessOrders.length + safeFinishedOrders.length;
 
   const commitOrdersToSlice = useCallback(
     (paused: Order[], process: Order[], finished: Order[]) => {

@@ -24,7 +24,10 @@ function NewProductCard({ product }: { product: Product }) {
   const [imgError, setImgError] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
 
-  const imagePath = `${serverApi}/${product.productImages[0]}`;
+  const productImages = Array.isArray(product.productImages)
+    ? product.productImages
+    : [];
+  const imagePath = `${serverApi}/${productImages[0] ?? ""}`;
   const volumeLabel =
     product.productCollection === ProductCollection.GADGETS
       ? product.productSize
@@ -96,6 +99,7 @@ function NewProductCard({ product }: { product: Product }) {
 // ─── Main section ─────────────────────────────────────────────────
 export default function NewProducts(): React.JSX.Element {
   const { newProducts } = useSelector(newProductsRetriever);
+  const safeNewProducts = Array.isArray(newProducts) ? newProducts : [];
 
   return (
     <div className="new-products-frame">
@@ -107,8 +111,8 @@ export default function NewProducts(): React.JSX.Element {
             <NewReleasesIcon className="new-products-title__icon" />
           </Box>
           <Stack className="new-cards-frame">
-            {newProducts.length !== 0 ? (
-              newProducts.map((product: Product) => (
+            {safeNewProducts.length !== 0 ? (
+              safeNewProducts.map((product: Product) => (
                 <NewProductCard key={product._id} product={product} />
               ))
             ) : (

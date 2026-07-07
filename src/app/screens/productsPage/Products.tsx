@@ -107,6 +107,7 @@ const ProductsPage: React.FC<ProductPageProps> = ({
   const navigate = useNavigate();
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRetriever);
+  const safeProducts = Array.isArray(products) ? products : [];
 
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
     page: 1,
@@ -258,7 +259,7 @@ const ProductsPage: React.FC<ProductPageProps> = ({
 
       <Box className="results-info">
         <Typography className="results-count">
-          {Math.min(products.length, PAGE_LENGTHS)} products found
+          {Math.min(safeProducts.length, PAGE_LENGTHS)} products found
         </Typography>
       </Box>
 
@@ -275,9 +276,12 @@ const ProductsPage: React.FC<ProductPageProps> = ({
             },
           }}
         >
-          {products.length !== 0 ? (
-            products.slice(0, PAGE_LENGTHS).map((product) => {
-              const imagePath = `${serverApi}/${product.productImages[0]}`;
+          {safeProducts.length !== 0 ? (
+            safeProducts.slice(0, PAGE_LENGTHS).map((product) => {
+              const productImages = Array.isArray(product.productImages)
+                ? product.productImages
+                : [];
+              const imagePath = `${serverApi}/${productImages[0] ?? ""}`;
               const volumeLabel =
                 product.productCollection === ProductCollection.GADGETS
                   ? product.productSize
@@ -356,7 +360,7 @@ const ProductsPage: React.FC<ProductPageProps> = ({
                             quantity: 1,
                             name: product.productName,
                             price: product.productPrice,
-                            image: product.productImages[0],
+                            image: productImages[0] ?? "",
                           });
                           e.stopPropagation();
                           handleAddToCart(product._id);
@@ -381,7 +385,7 @@ const ProductsPage: React.FC<ProductPageProps> = ({
       <Box className="pagination-wrapper">
         <Pagination
           count={
-            products.length > PAGE_LENGTHS
+            safeProducts.length > PAGE_LENGTHS
               ? productSearch.page + 1
               : productSearch.page
           }

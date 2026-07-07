@@ -41,6 +41,16 @@ class ProductService {
             if (Array.isArray(response.data)) return response.data;
             if (Array.isArray(response.products)) return response.products;
             if (Array.isArray(response.list)) return response.list;
+
+            if (response.data && typeof response.data === "object") {
+                const nested = response.data as {
+                    products?: unknown;
+                    list?: unknown;
+                };
+
+                if (Array.isArray(nested.products)) return nested.products;
+                if (Array.isArray(nested.list)) return nested.list;
+            }
         }
 
         return [];

@@ -13,10 +13,46 @@ class MemberService {
         try {
             const url = this.path + "/member/top-users";
             const result = await axios.get(url);
-            return result.data;
+            return this.normalizeMembers(result.data);
         } catch (err) {
             throw err;
         }
+    }
+
+    private normalizeMembers(data: unknown): Member[] {
+        if (Array.isArray(data)) return data;
+
+        if (data && typeof data === "object") {
+            const response = data as {
+                data?: unknown;
+                members?: unknown;
+                users?: unknown;
+                topUsers?: unknown;
+                list?: unknown;
+            };
+
+            if (Array.isArray(response.data)) return response.data;
+            if (Array.isArray(response.members)) return response.members;
+            if (Array.isArray(response.users)) return response.users;
+            if (Array.isArray(response.topUsers)) return response.topUsers;
+            if (Array.isArray(response.list)) return response.list;
+
+            if (response.data && typeof response.data === "object") {
+                const nested = response.data as {
+                    members?: unknown;
+                    users?: unknown;
+                    topUsers?: unknown;
+                    list?: unknown;
+                };
+
+                if (Array.isArray(nested.members)) return nested.members;
+                if (Array.isArray(nested.users)) return nested.users;
+                if (Array.isArray(nested.topUsers)) return nested.topUsers;
+                if (Array.isArray(nested.list)) return nested.list;
+            }
+        }
+
+        return [];
     }
 
     public async getRestaurant(): Promise<Member> {
