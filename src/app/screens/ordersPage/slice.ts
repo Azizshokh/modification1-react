@@ -12,13 +12,13 @@ const ordersPageSlice = createSlice({
   initialState,
   reducers: {
     setPausedOrders: (state, action) => {
-      state.pausedOrders = action.payload;
+      state.pausedOrders = Array.isArray(action.payload) ? action.payload : [];
     },
     setProcessOrders: (state, action) => {
-      state.processOrders = action.payload;
+      state.processOrders = Array.isArray(action.payload) ? action.payload : [];
     },
     setFinishedOrders: (state, action) => {
-      state.finishedOrders = action.payload;
+      state.finishedOrders = Array.isArray(action.payload) ? action.payload : [];
     },
   },
 });
