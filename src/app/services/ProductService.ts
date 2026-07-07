@@ -20,7 +20,7 @@ class ProductService {
             if (input.search)
                 url += `&search=${input.search}`;
 
-            const result = await axios.get(url);
+            const result = await axios.get(url, { withCredentials: true });
 
             return this.normalizeProducts(result.data);
         } catch (err) {
