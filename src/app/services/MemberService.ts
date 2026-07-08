@@ -12,7 +12,7 @@ class MemberService {
     public async getTopUsers(): Promise<Member[]> {
         try {
             const url = this.path + "/member/top-users";
-            const result = await axios.post(url, {}, { withCredentials: true });
+            const result = await axios.get(url, { withCredentials: true });
             return this.normalizeMembers(result.data);
         } catch (err) {
             throw err;
