@@ -26,7 +26,7 @@ import type { Product } from "../../../lib/types/product";
 import ProductService from "../../services/ProductService";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { ProductCollection } from "../../../lib/enums/product.enum";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 
 import { CartItem } from "../../../lib/types/search";
 import "./../../../css/product/chosenProduct.css";
@@ -130,7 +130,7 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
           {/* Main image */}
           <Box className="main-image-wrapper">
             <img
-              src={`${serverApi}/${productImages[activeImage] ?? ""}`}
+              src={toAssetUrl(productImages[activeImage])}
               alt={chosenProduct.productName}
               className="main-image"
             />
@@ -145,7 +145,7 @@ const ChosenProduct: React.FC<ProductPageProps> = ({ onAdd }) => {
                 onClick={() => setActiveImage(i)}
               >
                 <img
-                  src={`${serverApi}/${img}`}
+                  src={toAssetUrl(img)}
                   alt={`thumb-${i}`}
                   className="thumb-img"
                 />

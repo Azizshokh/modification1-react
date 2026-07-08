@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { retrievePopularProducts } from "./selector";
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 
 const popularProductsRetriever = createSelector(
   retrievePopularProducts,
@@ -62,7 +62,7 @@ function ProductCard({ product }: { product: Product }) {
   const productImages = Array.isArray(product.productImages)
     ? product.productImages
     : [];
-  const imagePath = `${serverApi}/${productImages[0] ?? ""}`;
+  const imagePath = toAssetUrl(productImages[0]);
 
   return (
     <Box className="pop-card">

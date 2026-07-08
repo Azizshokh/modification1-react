@@ -17,7 +17,7 @@ import { NavLink } from "react-router-dom";
 
 import AuthenticationModal, { useLogout } from "../auth";
 import { useGlobals } from "../../hooks/useGlobals";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 import Basket from "./Basket";
 import type { CartItem } from "../../../lib/types/search";
 import "../../../css/otherNavbar.css";
@@ -157,7 +157,7 @@ export function OtherNavbar({
                     alt={authMember.memberNick}
                     src={
                       authMember.memberImage
-                        ? `${serverApi}/${authMember.memberImage}`
+                        ? toAssetUrl(authMember.memberImage)
                         : undefined
                     }
                     sx={{ width: 36, height: 36, bgcolor: "transparent" }}

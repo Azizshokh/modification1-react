@@ -17,14 +17,14 @@ import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
 } from "../../../lib/sweetAlert";
-import { Messages, serverApi } from "../../../lib/config";
+import { Messages, toAssetUrl } from "../../../lib/config";
 import MemberService from "../../services/MemberService";
 
 export function Settings() {
   const { authMember, setAuthMember } = useGlobals();
   const [memberImage, setMemberImage] = useState<string>(
     authMember?.memberImage
-      ? `${serverApi}/${authMember.memberImage}`
+      ? toAssetUrl(authMember.memberImage)
       : "",
   );
 
@@ -51,7 +51,7 @@ export function Settings() {
     });
     setMemberImage(
       authMember.memberImage
-        ? `${serverApi}/${authMember.memberImage}`
+        ? toAssetUrl(authMember.memberImage)
         : "",
     );
   }, [

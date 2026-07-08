@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { retrieveTopUsers } from "./selector";
 import { Member } from "../../../lib/types/member";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 
 /** Redux Slice & Selector **/
 const topUsersRetriever = createSelector(retrieveTopUsers, (topUsers) => ({
@@ -50,7 +50,7 @@ export default function ActiveUsers(): React.JSX.Element {
 function UserCard({ member }: { member: Member }) {
   const [imgError, setImgError] = useState<boolean>(false);
   const imagePath = member.memberImage
-    ? `${serverApi}/${member.memberImage}`
+    ? toAssetUrl(member.memberImage)
     : "/img/default-user.png";
 
   return (

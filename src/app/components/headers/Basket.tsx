@@ -15,7 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 
 import type { CartItem } from "../../../lib/types/search";
-import { Messages, serverApi } from "../../../lib/config";
+import { Messages, toAssetUrl } from "../../../lib/config";
 import { useGlobals } from "../../hooks/useGlobals";
 import OrderService from "../../services/OrderService";
 import {
@@ -71,7 +71,7 @@ function BasketItem({
     <div className="basket-item">
       <div className="basket-item-thumb">
         <img
-          src={`${serverApi}/${item.image}`}
+          src={toAssetUrl(item.image)}
           alt={item.name}
           style={{
             width: "100%",

@@ -19,7 +19,7 @@ import { Settings } from "./Settings";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useGlobals } from "../../hooks/useGlobals";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 import { MemberType } from "../../../lib/enums/member.enum";
 import "../../../css/user/userPage.css";
 
@@ -78,7 +78,7 @@ export function UserPage() {
                   >
                     {authMember.memberImage ? (
                       <img
-                        src={`${serverApi}/${authMember.memberImage}`}
+                        src={toAssetUrl(authMember.memberImage)}
                         className={"order-user-avatar"}
                         alt={authMember.memberNick}
                         onError={(e) => {

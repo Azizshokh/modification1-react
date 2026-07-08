@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { createSelector } from "reselect";
 import { retrieveNewProducts } from "./selector";
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 
 /** Redux Slice & Selector **/
@@ -27,7 +27,7 @@ function NewProductCard({ product }: { product: Product }) {
   const productImages = Array.isArray(product.productImages)
     ? product.productImages
     : [];
-  const imagePath = `${serverApi}/${productImages[0] ?? ""}`;
+  const imagePath = toAssetUrl(productImages[0]);
   const volumeLabel =
     product.productCollection === ProductCollection.GADGETS
       ? product.productSize

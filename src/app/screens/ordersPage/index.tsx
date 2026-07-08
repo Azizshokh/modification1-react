@@ -22,7 +22,7 @@ import { useGlobals } from "../../hooks/useGlobals";
 import { OrderStatus } from "../../../lib/enums/order.enum";
 import type { Order, OrderItem } from "../../../lib/types/order";
 import { Product } from "../../../lib/types/product";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 import {
   sweetErrorHandling,
   sweetTopSmallSuccessAlert,
@@ -213,11 +213,8 @@ function productForItem(
 function productImageUrl(product?: Product): string | null {
   const image = product?.productImages?.[0];
   if (!image) return null;
-  if (image.startsWith("http://") || image.startsWith("https://")) {
-    return image;
-  }
 
-  return `${serverApi}/${image}`.replace(/([^:]\/)\/+/g, "$1");
+  return toAssetUrl(image);
 }
 
 function orderTitle(order: Order): string {

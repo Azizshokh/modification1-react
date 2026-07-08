@@ -35,7 +35,7 @@ import type { Product, ProductInquiry } from "../../../lib/types/product";
 import ProductService from "../../services/ProductService";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 import { ProductCollection } from "../../../lib/enums/product.enum";
-import { serverApi } from "../../../lib/config";
+import { toAssetUrl } from "../../../lib/config";
 import { useNavigate } from "react-router-dom";
 
 import "./../../../css/product/product.css";
@@ -281,7 +281,7 @@ const ProductsPage: React.FC<ProductPageProps> = ({
               const productImages = Array.isArray(product.productImages)
                 ? product.productImages
                 : [];
-              const imagePath = `${serverApi}/${productImages[0] ?? ""}`;
+              const imagePath = toAssetUrl(productImages[0]);
               const volumeLabel =
                 product.productCollection === ProductCollection.GADGETS
                   ? product.productSize
